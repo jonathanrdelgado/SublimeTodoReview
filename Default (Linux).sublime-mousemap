@@ -1,6 +1,0 @@
-[
-    {
-        "button": "button1", "count": 2, "modifiers": ["shift"],
-        "command": "mouse_goto_comment"
-    }
-]

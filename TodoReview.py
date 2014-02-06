@@ -18,7 +18,6 @@ import re
 
 
 Message = namedtuple('Message', 'type, msg')
-settings = sublime.load_settings('TodoReview.sublime-settings')
 
 
 def do_when(conditional, callback, *args, **kwargs):
@@ -218,10 +217,15 @@ class FileScanCounter(object):
 class TodoReviewCommand(sublime_plugin.TextCommand):
 
     def run(self, edit, paths=False):
+        global settings
+        settings = sublime.load_settings('TodoReview.sublime-settings')
+        # Keep settings here - in the event that this plugin is used before settings are init'd
+
         window = self.view.window()
 
         if not paths:
             paths = window.folders()
+
 
         file_counter = FileScanCounter()
         extractor = TodoExtractor(paths, file_counter)
