@@ -2,7 +2,7 @@
 SublimeTodoReview
 A SublimeText 3 plugin for reviewing todo (any other) comments within your code.
 
-@author Jonathan Delgado (Initial Repo by @robcow and ST3 update by @dnatag)
+@author Jonathan Delgado (Initial Repo by @robcowie and ST3 update by @dnatag)
 '''
 
 from collections import namedtuple
@@ -173,7 +173,7 @@ class RenderResultRunCommand(sublime_plugin.TextCommand):
 
         # Header
         hr = u'+ {0} +'.format('-' * 76)
-        header = u'{hr}\n| TODOS @ {0:<68} |\n| {1:<76} |\n{hr}\n'.format(
+        header = u'{hr}\n| TodoReview @ {0:<68} |\n| {1:<76} |\n{hr}\n'.format(
             datetime.now().strftime('%A %d %B %Y %H:%M'),
             u'{0} files scanned'.format(file_counter),
             hr=hr)

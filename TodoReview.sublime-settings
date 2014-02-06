@@ -1,0 +1,13 @@
+// TodoReview's default settings.
+
+{
+    "patterns": {
+        "TODO": "TODO[\\s]*?:+(?P<todo>.*)$",
+    },
+    "exclude_folders": [
+        ".git",
+        "npm_modules"
+    ],
+    "exclude_files": [],
+    "case_sensitive": false
+}

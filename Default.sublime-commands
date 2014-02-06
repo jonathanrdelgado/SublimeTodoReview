@@ -1,10 +1,6 @@
 [
     {
-        "caption": "Show TODOs: Project and open files",
+        "caption": "TodoReview: Generate List",
         "command": "todo"
-    },
-    {
-        "caption": "Show TODOs: Open files only",
-        "command": "todo", "args": {"open_files_only": true}
     }
 ]

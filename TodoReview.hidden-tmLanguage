@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple Computer//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+    <key>name</key>
+    <string>TODO Results</string>
+
+    <key>patterns</key>
+    <array>
+        <dict>
+            <key>comment</key>
+            <string>Titles</string>
+
+            <key>match</key>
+            <string>^.*##.*$</string>
+
+            <key>name</key>
+            <string>string</string>
+        </dict>
+        <dict>
+            <key>comment</key>
+            <string>Line Num</string>
+
+            <key>match</key>
+            <string>:[0-9]+</string>
+
+            <key>name</key>
+            <string>entity.name.function</string>
+        </dict>
+        <dict>
+            <key>comment</key>
+            <string>[ and ]</string>
+
+            <key>match</key>
+            <string>\[Critical\]</string>
+
+            <key>name</key>
+            <string>variable</string>
+        </dict>
+        <dict>
+            <key>comment</key>
+            <string>[ and ]</string>
+
+            <key>match</key>
+            <string>\[(.*?)\]</string>
+
+            <key>name</key>
+            <string>entity.name.class</string>
+        </dict>
+        <dict>
+            <key>comment</key>
+            <string>( and )</string>
+
+            <key>match</key>
+            <string>\([^)]*\)</string>
+
+            <key>name</key>
+            <string>keyword</string>
+        </dict>
+    </array>
+
+    <key>scopeName</key>
+    <string>text.todo-list</string>
+    <key>uuid</key>
+    <string>2ce8c28e-9c29-4f7f-bc65-7c5311732d29</string>
+</dict>
+</plist>
