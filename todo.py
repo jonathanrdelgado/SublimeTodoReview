@@ -1,18 +1,15 @@
-# -*- coding: utf-8 -*-
+'''
+SublimeTodoReview
+A SublimeText 3 plugin for reviewing todo (any other) comments within your code.
 
-# TODO: Implement TODO_IGNORE setting (http://mdeering.com/posts/004-get-your-textmate-todos-and-fixmes-under-control)
-# TODO: Make the output clickable (å la find results)
-# TODO: Occasional NoneType bug
-# todo: Make the sections foldable (define them as regions?)
-
-""""""
+@author Jonathan Delgado (Initial Repo by @robcow and ST3 update by @dnatag)
+'''
 
 from collections import namedtuple
 from datetime import datetime
 import functools
 import fnmatch
 from itertools import groupby
-import logging
 from os import path, walk
 import re
 import threading
@@ -21,10 +18,7 @@ import sublime
 import sublime_plugin
 
 
-DEBUG = True
-
 DEFAULT_SETTINGS = {
-    'result_title': 'TODO Results',
 
     'core_patterns': {
         'TODO': r'TODO[\s]*?:+(?P<todo>.*)$',
@@ -37,29 +31,6 @@ DEFAULT_SETTINGS = {
 }
 
 Message = namedtuple('Message', 'type, msg')
-
-# LOGGING SETUP
-try:
-    from logging import NullHandler
-except ImportError:
-    class NullHandler(logging.Handler):
-
-        def handle(self, record):
-            pass
-
-        def emit(self, record):
-            pass
-
-        def createLock(self):
-            self.lock = None
-
-log = logging.getLogger('SublimeTODO')
-log.handlers = []  # hack to prevent extraneous handlers on ST2 auto-reload
-log.addHandler(NullHandler())
-log.setLevel(logging.INFO)
-if DEBUG:
-    log.addHandler(logging.StreamHandler())
-    log.setLevel(logging.DEBUG)
 
 
 def do_when(conditional, callback, *args, **kwargs):
@@ -116,29 +87,20 @@ class ThreadProgress(object):
 class TodoExtractor(object):
 
     def __init__(
-        self, settings, filepaths, dirpaths, ignored_dirs, ignored_file_patterns,
+        self, settings, dirpaths, ignored_dirs, ignored_file_patterns,
             file_counter):
-        self.filepaths = filepaths
         self.dirpaths = dirpaths
         self.patterns = settings['patterns']
         self.settings = settings
         self.file_counter = file_counter
         self.ignored_dirs = ignored_dirs
         self.ignored_files = ignored_file_patterns
-        self.log = logging.getLogger('SublimeTODO.extractor')
 
     def iter_files(self):
         """"""
         seen_paths_ = []
-        files = self.filepaths
         dirs = self.dirpaths
         exclude_dirs = self.ignored_dirs
-
-        for filepath in files:
-            pth = path.realpath(path.abspath(filepath))
-            if pth not in seen_paths_:
-                seen_paths_.append(pth)
-                yield pth
 
         for dirpath in dirs:
             dirpath = path.abspath(dirpath)
@@ -148,8 +110,6 @@ class TodoExtractor(object):
                 # patterns
                 for dir in exclude_dirs:
                     if dir in dirnames:
-                        self.log.debug(
-                            u'SublimeTODO ignoring dir: {0}'.format(dir))
                         dirnames.remove(dir)
 
                 for filepath in filenames:
@@ -181,7 +141,6 @@ class TodoExtractor(object):
         for filepath in self.search_targets():
             try:
                 f = open(filepath, 'r', encoding='utf-8')
-                self.log.debug(u'SublimeTODO scanning {0}'.format(filepath))
                 for linenum, line in enumerate(f):
                     for mo in patt.finditer(line):
                         # Remove the non-matched groups
@@ -203,16 +162,14 @@ class RenderResultRunCommand(sublime_plugin.TextCommand):
     def run(self, edit, formatted_results, file_counter):
         # Figure out view
         active_window = sublime.active_window()
-        view_name = 'TODO_RESULTS'
         existing_results = [v for v in active_window.views()
-                            if v.name() == view_name and v.is_scratch()]
+                            if v.name() == 'TodoReview' and v.is_scratch()]
         if existing_results:
             result_view = existing_results[0]
         else:
             result_view = active_window.new_file()
-            result_view.set_name(view_name)
+            result_view.set_name('TodoReview')
             result_view.set_scratch(True)
-            result_view.settings().set('todo_results', True)
 
         # Header
         hr = u'+ {0} +'.format('-' * 76)
@@ -255,7 +212,7 @@ class RenderResultRunCommand(sublime_plugin.TextCommand):
 
         # Set syntax and settings
         result_view.assign_syntax(
-            'Packages/SublimeTODO/todo_results.hidden-tmLanguage')
+            'Packages/SublimeTodoReview/todo_results.hidden-tmLanguage')
         result_view.settings().set('line_padding_bottom', 2)
         result_view.settings().set('line_padding_top', 2)
         result_view.settings().set('word_wrap', False)
@@ -309,10 +266,8 @@ class FileScanCounter(object):
     def __init__(self):
         self.ct = 0
         self.lock = threading.RLock()
-        self.log = logging.getLogger('SublimeTODO')
 
     def __call__(self, filepath):
-        self.log.debug(u'Scanning %s' % filepath)
         self.increment()
 
     def __str__(self):
@@ -330,14 +285,7 @@ class FileScanCounter(object):
 
 class TodoCommand(sublime_plugin.TextCommand):
 
-    def search_paths(self, window, open_files_only=False):
-        """Return (filepaths, dirpaths)"""
-        return (
-            [view.file_name() for view in window.views() if view.file_name()],
-            window.folders() if not open_files_only else []
-        )
-
-    def run(self, edit, open_files_only=False):
+    def run(self, edit, paths=False):
         window = self.view.window()
 
         user_settings = self.view.settings().get('todo', {})
@@ -346,8 +294,7 @@ class TodoCommand(sublime_plugin.TextCommand):
             list(user_settings.items()) + list(project_settings.items()))
 
         # TODO: Cleanup this init code. Maybe move it to the settings object
-        filepaths, dirpaths = self.search_paths(
-            window, open_files_only=open_files_only)
+        dirpaths = window.folders()
 
         ignored_dirs = settings.get('folder_exclude_patterns', [])
         # Get exclude patterns from global settings
@@ -364,7 +311,7 @@ class TodoCommand(sublime_plugin.TextCommand):
             patt) for patt in exclude_file_patterns]
 
         file_counter = FileScanCounter()
-        extractor = TodoExtractor(settings, filepaths, dirpaths, ignored_dirs,
+        extractor = TodoExtractor(settings, dirpaths, ignored_dirs,
                                   exclude_file_patterns, file_counter)
 
         # NOTE: TodoRenderer class was disassembled and codes are moved
@@ -423,7 +370,6 @@ class ClearSelection(sublime_plugin.TextCommand):
 class GotoComment(sublime_plugin.TextCommand):
 
     def __init__(self, *args):
-        self.log = logging.getLogger('SublimeTODO.nav')
         super(GotoComment, self).__init__(*args)
 
     def run(self, edit):
@@ -435,7 +381,6 @@ class GotoComment(sublime_plugin.TextCommand):
         # there is no other way to store regions with associated data)
         data = self.view.settings().get('result_regions')['{0},{1}'.format(
             selected_region.a, selected_region.b)]
-        self.log.debug(u'Goto comment at {filepath}:{linenum}'.format(**data))
         new_view = self.view.window().open_file(data['filepath'])
         do_when(lambda: not new_view.is_loading(), lambda:
                 new_view.run_command("goto_line", {"line": data['linenum']}))
@@ -444,7 +389,6 @@ class GotoComment(sublime_plugin.TextCommand):
 class MouseGotoComment(sublime_plugin.TextCommand):
 
     def __init__(self, *args):
-        self.log = logging.getLogger('SublimeTODO.nav')
         super(MouseGotoComment, self).__init__(*args)
 
     def highlight(self, region):
@@ -465,7 +409,6 @@ class MouseGotoComment(sublime_plugin.TextCommand):
         self.highlight(result)
         data = self.view.settings().get('result_regions')[
             '{0},{1}'.format(result.a, result.b)]
-        self.log.debug(u'Goto comment at {filepath}:{linenum}'.format(**data))
         new_view = self.view.window().open_file(data['filepath'])
         do_when(lambda: not new_view.is_loading(), lambda:
                 new_view.run_command("goto_line", {"line": data['linenum']}))
