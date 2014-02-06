@@ -3,7 +3,7 @@ A SublimeText 3 plugin for reviewing todo (any other) comments within your code.
 
 **Check the issues for upcoming features**
 
-This is a fork of [@robcowie's](https://github.com/robcowie) SublimeTodo. Unfortunately, he is unable to maintain it any longer. Additionally, this includes [@dnatag's](https://github.com/dnatag) ST3 fork, which allowed me to get this thing fixed relatively quickly. This package will be actively maintained, and is in full working condition for ST3. ST2 will not be supported as the original SublimeTODO should cover you.
+This is a fork of [@robcowie's](https://github.com/robcowie) SublimeTodo. Unfortunately, he is unable to maintain it any longer. Additionally, this includes [@dnatag's](https://github.com/dnatag) ST3 fork, which allowed me to get this thing fixed relatively quickly.
 
 
 # Install
@@ -74,7 +74,7 @@ One new feature that wasn't on SublimeTodo is the ability to tag and prioritize 
 
 Additionally, you can tag tasks using something like `@tomorrow` or `@bug`. These are only example, anything following the `@` sign, before a space, will be highlighted accordingly. If you are like me, you also would like one more option, just in the event something really needs to stand out, perhaps a reference link, etc. You can also use `[Comment]` or `[Need To Test]` for another type of reference as needed. Unlike tags with the `@` sign, you can use spaces between brackets.
 
-The way that these are colored depends on your color scheme. It's been a pain point of sublime text for quite some time that plugins are unable to influence the color scheme without some manual edits. I use and would recommend the Tomorrow Night color scheme. However, if you are not, here are the corresponding colors these tags will be:
+The way that these are colored depends on your color scheme. It's been a pain point of sublime text for quite some time that plugins are unable to influence the color scheme without some manual edits. I use and would recommend the [Tomorrow Night](https://github.com/theymaybecoders/sublime-tomorrow-theme) color scheme. However, if you are not, here are the corresponding colors these tags will be:
 
 - **Titles** Same color as a *string*
 - **Line Numbers** Same color as a *function*
