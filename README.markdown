@@ -3,7 +3,7 @@ A SublimeText 3 plugin for reviewing todo (any other) comments within your code.
 
 **Check the issues for upcoming features**
 
-This is a fork of @robcowie's SublimeTodo. Unfortunatly, he is unable to maintain it any longer. Additionally, this includes @dnatag's ST3 fork, which allowed me to get this thing fixed relatively quickly. This package will be actively maintained, and is in full working condition for ST3. ST2 will not be supported as the original SublimeTODO should cover you.
+This is a fork of [@robcowie's](https://github.com/robcowie) SublimeTodo. Unfortunatly, he is unable to maintain it any longer. Additionally, this includes [@dnatag's](https://github.com/dnatag) ST3 fork, which allowed me to get this thing fixed relatively quickly. This package will be actively maintained, and is in full working condition for ST3. ST2 will not be supported as the original SublimeTODO should cover you.
 
 
 # Install
@@ -31,7 +31,7 @@ You can use any RegExp pattern to search by, leaving a lot of room for customiza
 By default, searching is not case sensitive. If you would like it to force case, you can add the following to your config.
 
 ```javascript
-    "case_sensitive": true
+"case_sensitive": true
 ```
 
 
@@ -42,10 +42,10 @@ Obviously, some files or folders might need to be excluded from your search. An 
 To exclude directories, add the directory name to `exclude_folders`. Please note, this is not a glob or RegExp field. A preset for your `.git` folder has already been added for you. An example of this:
 
 ```javascript
-    "exclude_folders": [
-        ".git",
-        "node_modules"
-    ]
+"exclude_folders": [
+    ".git",
+    "node_modules"
+]
 ```
 
 Additionally, if you would like to exclude individual files, you can base the exclusion on name or glob pattern through `exclude files`. Example of this:
@@ -64,10 +64,6 @@ Simply open your Sublime Text 3 Command Pallet and find the `TodoReview: Generat
 
 ## Navigating results
 **Documenation coming after new schema**
-
-
-#Contributing
-All contributions are welcome. I would like to keep this project lean as possible, and not stray to far from the core competency of reviewing comments. Updates will mostly come from maintenence and new features. As far as issues go, please feel free to submit them, but I offer no warranty on this software.
 
 
 # License
