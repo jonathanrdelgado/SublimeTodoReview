@@ -1,0 +1,6 @@
+SublimeTODO 1.1.0 Changelog:
+
+ - Repo reorg to support explicit versioning and Package Control upgrade messages.
+
+ - [LINUX] alt + dblclick is replaced by shift + dblclick to prevent clash 
+   with common alt+click+drag method of moving windows.

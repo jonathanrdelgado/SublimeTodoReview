@@ -1,0 +1,80 @@
+[
+
+    // {
+    //    "keys": ["n"], "command": "goto_next_result",
+    //     "context": [
+    //         { "key": "setting.todo_results", "operator": "equal", "operand": true }
+    //     ]
+    // }
+
+    {
+        "keys": ["n"], "command": "navigate_results",
+        "context": [
+            {"key": "setting.command_mode", "operand": true},
+            {"key": "setting.todo_results"}
+        ],
+        "args": {"direction": "forward"}
+    },
+
+    {
+        "keys": ["down"], "command": "navigate_results",
+        "context": [
+            {"key": "setting.command_mode", "operand": true},
+            {"key": "setting.todo_results"}
+        ],
+        "args": {"direction": "forward"}
+    },
+    
+    {
+        "keys": ["j"], "command": "navigate_results",
+        "context": [
+            {"key": "setting.command_mode", "operand": true},
+            {"key": "setting.todo_results"}
+        ],
+        "args": {"direction": "forward"}
+    },
+
+    {
+        "keys": ["p"], "command": "navigate_results",
+        "context": [
+            {"key": "setting.command_mode", "operand": true},
+            {"key": "setting.todo_results"}
+        ],
+        "args": {"direction": "backward"}
+    },
+
+    {
+        "keys": ["up"], "command": "navigate_results",
+        "context": [
+            {"key": "setting.command_mode", "operand": true},
+            {"key": "setting.todo_results"}
+        ],
+        "args": {"direction": "backward"}
+    },
+
+    {
+        "keys": ["k"], "command": "navigate_results",
+        "context": [
+            {"key": "setting.command_mode", "operand": true},
+            {"key": "setting.todo_results"}
+        ],
+        "args": {"direction": "backward"}
+    },
+
+    {
+        "keys": ["c"], "command": "clear_selection",
+        "context": [
+            {"key": "setting.command_mode", "operand": true},
+            {"key": "setting.todo_results"}
+        ]
+    },
+
+    {
+        "keys": ["enter"], "command": "goto_comment",
+        "context": [
+            {"key": "setting.command_mode", "operand": true},
+            {"key": "setting.todo_results"}
+        ]
+    }
+
+]
