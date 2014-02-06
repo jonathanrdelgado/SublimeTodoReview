@@ -1,5 +1,12 @@
 #0.1.0 - 02/06/14
  - Initial Release
  - Fixed Setting Issues
+ - Fixed Result Navigation Issues
+ - Added Color Scheme Support
+ - Added Priority Support
+ - Added Tag Support
+ - Modified the way search paths are inputted (for eventual sidebar support)
+ - Added Changelog
+ - Added Readme
+ - Removed old files
  - Code Cleanup
- - Preliminary work on upcoming features

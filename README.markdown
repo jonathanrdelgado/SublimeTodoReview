@@ -3,7 +3,7 @@ A SublimeText 3 plugin for reviewing todo (any other) comments within your code.
 
 **Check the issues for upcoming features**
 
-This is a fork of [@robcowie's](https://github.com/robcowie) SublimeTodo. Unfortunatly, he is unable to maintain it any longer. Additionally, this includes [@dnatag's](https://github.com/dnatag) ST3 fork, which allowed me to get this thing fixed relatively quickly. This package will be actively maintained, and is in full working condition for ST3. ST2 will not be supported as the original SublimeTODO should cover you.
+This is a fork of [@robcowie's](https://github.com/robcowie) SublimeTodo. Unfortunately, he is unable to maintain it any longer. Additionally, this includes [@dnatag's](https://github.com/dnatag) ST3 fork, which allowed me to get this thing fixed relatively quickly. This package will be actively maintained, and is in full working condition for ST3. ST2 will not be supported as the original SublimeTODO should cover you.
 
 
 # Install
@@ -63,7 +63,26 @@ Additionally, if you would like to exclude individual files, you can base the ex
 Simply open your Sublime Text 3 Command Pallet and find the `TodoReview: Generate List` command. This will, as the name explains, generate your TODO List. You can then use these results to jump to the corresponding result.
 
 ## Navigating results
-**Documenation coming after new schema**
+Once the list is generated, as a swift coder, you must naturally want to navigate it with your keyboard, right? Well you are in luck!
+
+By pressing the `up` or `down` keys, you are able to swiftly navigate the results. If you are a VIM user, you can also use `j` and `k` respectably. Once you have navigated to the result you want, simply press `enter` to open the result in a new tab, while going to the corresponding line.
+
+In the event you would like to clear your selection, you may do so by pressing `c`.
+
+##Color Scheme
+One new feature that wasn't on SublimeTodo is the ability to tag and prioritize tasks (or whatever you are searching for). For the initial release, you are able to use `@priority`, `@critical` or `[priority]`, `[critical]` to keep track of your more important tasks. Right now, this only turns it a unique color, but down the line, the system will actually sort results with a priority hierarchy.
+
+Additionally, you can tag tasks using something like `@tomorrow` or `@bug`. These are only example, anything following the `@` sign, before a space, will be highlighted accordingly. If you are like me, you also would like one more option, just in the event something really needs to stand out, perhaps a reference link, etc. You can also use `[Comment]` or `[Need To Test]` for another type of reference as needed. Unlike tags with the `@` sign, you can use spaces between brackets.
+
+The way that these are colored depends on your color scheme. It's been a pain point of sublime text for quite some time that plugins are unable to influence the color scheme without some manual edits. I use and would recommend the Tomorrow Night color scheme. However, if you are not, here are the corresponding colors these tags will be:
+
+- **Titles** Same color as a *string*
+- **Line Numbers** Same color as a *function*
+- **Priority** same color as a *variable*
+- **Bracket Tags** same color as a *class*
+- **@ Tags** same color as a *keyword*
+
+These may change in the future, but for now, this is the best way of to handle highlighting differences.
 
 
 # License
