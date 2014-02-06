@@ -16,7 +16,6 @@ import functools
 import fnmatch
 import re
 
-
 Message = namedtuple('Message', 'type, msg')
 
 
@@ -61,7 +60,6 @@ class TodoExtractor(object):
         self.ignored_files = [fnmatch.translate(patt) for patt in settings.get('exclude_files', [])]
 
     def iter_files(self):
-        """"""
         seen_paths_ = []
         dirs = self.dirpaths
         exclude_dirs = self.ignored_dirs
@@ -121,9 +119,10 @@ class RenderResultRunCommand(sublime_plugin.TextCommand):
             result_view = active_window.new_file()
             result_view.set_name('TodoReview')
             result_view.set_scratch(True)
+            result_view.settings().set('todo_results', True)
 
-        hr = u'+ {0} +'.format('-' * 76)
-        header = u'{hr}\n| TodoReview @ {0:<63} |\n| {1:<76} |\n{hr}\n'.format(datetime.now().strftime('%A %d %B %Y %H:%M'), u'{0} files scanned'.format(file_counter), hr=hr)
+        hr = u'+ {0} +'.format('-' * 56)
+        header = u'{hr}\n| TodoReview @ {0:<43} |\n| {1:<56} |\n{hr}\n'.format(datetime.now().strftime('%A %m/%d/%y at %I:%M%p'), u'{0} files scanned'.format(file_counter), hr=hr)
 
         result_view.erase(edit, sublime.Region(0, result_view.size()))
         result_view.insert(edit, result_view.size(), header)
@@ -146,7 +145,7 @@ class RenderResultRunCommand(sublime_plugin.TextCommand):
         d_ = dict(('{0},{1}'.format(k.a, k.b), v) for k, v in zip(regions_data[0], regions_data[1]))
         result_view.settings().set('result_regions', d_)
 
-        result_view.assign_syntax('Packages/SublimeTodoReview/todo_results.hidden-tmLanguage')
+        result_view.assign_syntax('Packages/SublimeTodoReview/TodoReview.hidden-tmLanguage')
         result_view.settings().set('line_padding_bottom', 2)
         result_view.settings().set('line_padding_top', 2)
         result_view.settings().set('word_wrap', False)
@@ -170,11 +169,6 @@ class WorkerThread(threading.Thread):
         sublime.set_timeout(functools.partial(self.callback, formatted, self.file_counter), 10)
 
     def format(self, messages):
-        """Yield lines for rendering into results view. Includes headers and
-        blank lines.
-        Lines are returned in the form (type, content, [data]) where type is either
-        'header', 'whitespace' or 'result'
-        """
         key_func = lambda m: m['match'].type
         messages = sorted(messages, key=key_func)
 
@@ -189,10 +183,7 @@ class WorkerThread(threading.Thread):
                     line = u"{idx}. {filepath}:{linenum} {msg}".format(idx=idx, filepath=filepath, linenum=m['linenum'], msg=msg)
                     yield ('result', line, m)
 
-
 class FileScanCounter(object):
-
-    """Thread-safe counter used to update the status bar"""
 
     def __init__(self):
         self.ct = 0
@@ -213,9 +204,7 @@ class FileScanCounter(object):
         with self.lock:
             self.ct = 0
 
-
 class TodoReviewCommand(sublime_plugin.TextCommand):
-
     def run(self, edit, paths=False):
         global settings
         settings = sublime.load_settings('TodoReview.sublime-settings')
@@ -236,7 +225,6 @@ class TodoReviewCommand(sublime_plugin.TextCommand):
 
     def render_formatted(self, rendered, counter):
         self.view.run_command("render_result_run", {"formatted_results": rendered, "file_counter": str(counter)})
-
 
 class NavigateResults(sublime_plugin.TextCommand):
     DIRECTION = {'forward': 1, 'backward': -1}
@@ -266,13 +254,10 @@ class NavigateResults(sublime_plugin.TextCommand):
         view.add_regions('selection', [target], 'selected', 'dot')
         view.show(target)
 
-
 class ClearSelection(sublime_plugin.TextCommand):
-
     def run(self, edit):
         self.view.erase_regions('selection')
         self.view.settings().erase('selected_result')
-
 
 class GotoComment(sublime_plugin.TextCommand):
 
@@ -283,30 +268,5 @@ class GotoComment(sublime_plugin.TextCommand):
         selection = int(self.view.settings().get('selected_result', -1))
         selected_region = self.view.get_regions('results')[selection]
         data = self.view.settings().get('result_regions')['{0},{1}'.format(selected_region.a, selected_region.b)]
-        new_view = self.view.window().open_file(data['filepath'])
-        do_when(lambda: not new_view.is_loading(), lambda:new_view.run_command("goto_line", {"line": data['linenum']}))
-
-
-class MouseGotoComment(sublime_plugin.TextCommand):
-
-    def __init__(self, *args):
-        super(MouseGotoComment, self).__init__(*args)
-
-    def highlight(self, region):
-        target = region.cover(region)
-        self.view.add_regions('selection', [target], 'selected', 'dot')
-        self.view.show(target)
-
-    def get_result_region(self, pos):
-        line = self.view.line(pos)
-        return line
-
-    def run(self, edit):
-        if not self.view.settings().get('result_regions'):
-            return
-        pos = self.view.sel()[0].end()
-        result = self.get_result_region(pos)
-        self.highlight(result)
-        data = self.view.settings().get('result_regions')['{0},{1}'.format(result.a, result.b)]
         new_view = self.view.window().open_file(data['filepath'])
         do_when(lambda: not new_view.is_loading(), lambda:new_view.run_command("goto_line", {"line": data['linenum']}))
