@@ -2,7 +2,7 @@
 
 {
     "patterns": {
-        "TODO": "TODO[\\s]*?:+(?P<todo>.*)$",
+        "TODO": "TODO[\\s]*?:+(?P<todo>.*)$"
     },
     "exclude_folders": [
         ".git",
