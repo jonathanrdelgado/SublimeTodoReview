@@ -1,6 +1,6 @@
 [
     {
         "caption": "TodoReview: Generate List",
-        "command": "todo"
+        "command": "todo_review"
     }
 ]

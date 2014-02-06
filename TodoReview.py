@@ -215,7 +215,7 @@ class FileScanCounter(object):
             self.ct = 0
 
 
-class TodoCommand(sublime_plugin.TextCommand):
+class TodoReviewCommand(sublime_plugin.TextCommand):
 
     def run(self, edit, paths=False):
         window = self.view.window()
