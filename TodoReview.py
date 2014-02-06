@@ -7,30 +7,18 @@ A SublimeText 3 plugin for reviewing todo (any other) comments within your code.
 
 from collections import namedtuple
 from datetime import datetime
-import functools
-import fnmatch
 from itertools import groupby
 from os import path, walk
-import re
-import threading
-
-import sublime
 import sublime_plugin
+import threading
+import sublime
+import functools
+import fnmatch
+import re
 
-
-DEFAULT_SETTINGS = {
-
-    'core_patterns': {
-        'TODO': r'TODO[\s]*?:+(?P<todo>.*)$',
-        'NOTE': r'NOTE[\s]*?:+(?P<note>.*)$',
-        'FIXME': r'FIX ?ME[\s]*?:+(?P<fixme>.*)$',
-        'CHANGED': r'CHANGED[\s]*?:+(?P<changed>.*)$'
-    },
-
-    'patterns': {}
-}
 
 Message = namedtuple('Message', 'type, msg')
+settings = sublime.load_settings('TodoReview.sublime-settings')
 
 
 def do_when(conditional, callback, *args, **kwargs):
@@ -38,21 +26,7 @@ def do_when(conditional, callback, *args, **kwargs):
         return callback(*args, **kwargs)
     sublime.set_timeout(functools.partial(do_when, conditional, callback, *args, **kwargs), 50)
 
-
-class Settings(dict):
-
-    """Combine default and user settings"""
-
-    def __init__(self, user_settings):
-        settings = DEFAULT_SETTINGS.copy()
-        settings.update(user_settings)
-        settings['core_patterns'].update(settings['patterns'])
-        settings['patterns'] = settings.pop('core_patterns')
-        super(Settings, self).__init__(settings)
-
-
 class ThreadProgress(object):
-
     def __init__(self, thread, message, success_message, file_counter):
         self.thread = thread
         self.message = message
@@ -69,7 +43,6 @@ class ThreadProgress(object):
                 return
             sublime.status_message(self.success_message)
             return
-
         before = i % self.size
         after = (self.size - 1) - before
         sublime.status_message('%s [%s=%s] (%s files scanned)' % (self.message, ' ' * before, ' ' * after, self.file_counter))
@@ -80,16 +53,13 @@ class ThreadProgress(object):
         i += self.addend
         sublime.set_timeout(lambda: self.run(i), 100)
 
-
 class TodoExtractor(object):
-
-    def __init__(self, settings, dirpaths, ignored_dirs, ignored_file_patterns, file_counter):
+    def __init__(self, dirpaths, file_counter):
         self.dirpaths = dirpaths
-        self.patterns = settings['patterns']
-        self.settings = settings
+        self.patterns = settings.get('patterns', {})
         self.file_counter = file_counter
-        self.ignored_dirs = ignored_dirs
-        self.ignored_files = ignored_file_patterns
+        self.ignored_dirs = settings.get('exclude_folders', [])
+        self.ignored_files = [fnmatch.translate(patt) for patt in settings.get('exclude_files', [])]
 
     def iter_files(self):
         """"""
@@ -100,7 +70,6 @@ class TodoExtractor(object):
         for dirpath in dirs:
             dirpath = path.abspath(dirpath)
             for dirpath, dirnames, filenames in walk(dirpath):
-                # TODO: These are not patterns. Consider making them glob patterns
                 for dir in exclude_dirs:
                     if dir in dirnames:
                         dirnames.remove(dir)
@@ -113,7 +82,6 @@ class TodoExtractor(object):
                         yield pth
 
     def filter_files(self, files):
-        """"""
         exclude_patterns = [re.compile(patt) for patt in self.ignored_files]
 
         for filepath in files:
@@ -122,13 +90,11 @@ class TodoExtractor(object):
             yield filepath
 
     def search_targets(self):
-        """Yield filtered filepaths for message extraction"""
         return self.filter_files(self.iter_files())
 
     def extract(self):
-        """"""
         message_patterns = '|'.join(self.patterns.values())
-        case_sensitivity = 0 if self.settings.get('case_sensitive', False) else re.IGNORECASE
+        case_sensitivity = 0 if settings.get('case_sensitive', False) else re.IGNORECASE
         patt = re.compile(message_patterns, case_sensitivity)
         for filepath in self.search_targets():
             try:
@@ -146,11 +112,8 @@ class TodoExtractor(object):
                 if f is not None:
                     f.close()
 
-
 class RenderResultRunCommand(sublime_plugin.TextCommand):
-
     def run(self, edit, formatted_results, file_counter):
-
         active_window = sublime.active_window()
         existing_results = [v for v in active_window.views() if v.name() == 'TodoReview' and v.is_scratch()]
         if existing_results:
@@ -160,18 +123,12 @@ class RenderResultRunCommand(sublime_plugin.TextCommand):
             result_view.set_name('TodoReview')
             result_view.set_scratch(True)
 
-        # Header
         hr = u'+ {0} +'.format('-' * 76)
         header = u'{hr}\n| TodoReview @ {0:<63} |\n| {1:<76} |\n{hr}\n'.format(datetime.now().strftime('%A %d %B %Y %H:%M'), u'{0} files scanned'.format(file_counter), hr=hr)
 
-        # result_view = self.view
-        # edit = result_view.begin_edit()
         result_view.erase(edit, sublime.Region(0, result_view.size()))
         result_view.insert(edit, result_view.size(), header)
-        # result_view.end_edit(edit)
 
-        # Region : match_dicts
-        # 2 row list, where the first is region and the second is data
         regions_data = [x[:] for x in [[]] * 2]
 
         # Result sections
@@ -184,18 +141,12 @@ class RenderResultRunCommand(sublime_plugin.TextCommand):
                 regions_data[0].append(rgn)
                 regions_data[1].append(data)
             result_view.insert(edit, result_view.size(), u'\n')
-            # result_view.end_edit(edit)
 
         result_view.add_regions('results', regions_data[0], '')
 
-        # Store {Region : data} map in settings
-        # TODO: Abstract this out to a storage class Storage.get(region) ==> data dict
-        # Region() cannot be stored in settings, so convert to a primitive type
-        # d_ = regions
         d_ = dict(('{0},{1}'.format(k.a, k.b), v) for k, v in zip(regions_data[0], regions_data[1]))
         result_view.settings().set('result_regions', d_)
 
-        # Set syntax and settings
         result_view.assign_syntax('Packages/SublimeTodoReview/todo_results.hidden-tmLanguage')
         result_view.settings().set('line_padding_bottom', 2)
         result_view.settings().set('line_padding_top', 2)
@@ -269,28 +220,11 @@ class TodoCommand(sublime_plugin.TextCommand):
     def run(self, edit, paths=False):
         window = self.view.window()
 
-        user_settings = self.view.settings().get('todo', {})
-        project_settings = window.project_data().get('todo', {})
-        settings = Settings(list(user_settings.items()) + list(project_settings.items()))
-
-        # TODO: Cleanup this init code. Maybe move it to the settings object
-        dirpaths = window.folders()
-
-        ignored_dirs = settings.get('folder_exclude_patterns', [])
-        global_settings = sublime.load_settings('Global.sublime-settings')
-        ignored_dirs.extend(global_settings.get('folder_exclude_patterns', []))
-
-        exclude_file_patterns = settings.get('file_exclude_patterns', [])
-        exclude_file_patterns.extend(global_settings.get('file_exclude_patterns', []))
-        exclude_file_patterns.extend(global_settings.get('binary_file_patterns', []))
-        exclude_file_patterns = [fnmatch.translate(patt) for patt in exclude_file_patterns]
+        if not paths:
+            paths = window.folders()
 
         file_counter = FileScanCounter()
-        extractor = TodoExtractor(settings, dirpaths, ignored_dirs, exclude_file_patterns, file_counter)
-
-        # NOTE: TodoRenderer class was disassembled and codes are moved
-        # to WorkerThread and RenderResultRunCommand
-        # renderer = TodoRenderer(settings, window, file_counter)
+        extractor = TodoExtractor(paths, file_counter)
 
         worker_thread = WorkerThread(extractor, self.render_formatted, file_counter)
         worker_thread.start()
@@ -315,7 +249,6 @@ class NavigateResults(sublime_plugin.TextCommand):
             sublime.status_message('No results to navigate')
             return
 
-        # NOTE: numbers stored in settings are coerced to floats or longs
         selection = int(settings.get('selected_result', self.STARTING_POINT[direction]))
         selection = selection + self.DIRECTION[direction]
         try:
@@ -367,7 +300,6 @@ class MouseGotoComment(sublime_plugin.TextCommand):
     def run(self, edit):
         if not self.view.settings().get('result_regions'):
             return
-        # get selected line
         pos = self.view.sel()[0].end()
         result = self.get_result_region(pos)
         self.highlight(result)
