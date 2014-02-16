@@ -1,5 +1,6 @@
 #Master
  - Fixed Failure to load language file (#10)
+ - Added Sublime Menu for Preferences (#13)
 
 #2.0.1 - 02/15/14
  - Fixed Syntax Load Problem
