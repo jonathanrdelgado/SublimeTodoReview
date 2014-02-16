@@ -3,7 +3,7 @@ A SublimeText 3 plugin for reviewing todo (any other) comments within your code.
 
 **Check the issues for upcoming features**
 
-This is a fork of [@robcowie's](https://github.com/robcowie) SublimeTodo. Unfortunately, he is unable to maintain it any longer. Additionally, this includes [@dnatag's](https://github.com/dnatag) ST3 fork, which allowed me to get this thing fixed relatively quickly.
+This is a fork of [@robcowie's](https://github.com/robcowie) SublimeTodo. Unfortunately, it doesn't have ST3 support and he is unable to maintain it any longer. Additionally, this includes [@dnatag's](https://github.com/dnatag) ST3 fork, which allowed me to get everything fixed relatively quickly.
 
 
 # Install

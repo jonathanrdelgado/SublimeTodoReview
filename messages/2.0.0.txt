@@ -1,0 +1,24 @@
+TodoReview 2.0.0 (PREVIOUSLY SUBLIMETODO)
+--------------------
+
+Unfortunatly, due to lack of time, the creater of SublimeTODO, @robcowie, is unable to maintain his package any longer. This is an extremely popular and useful plugin that needs an active maintainer and regular updates. @robcowie has allowed me to continue with his work, and hopefully I can both maintain and come up with some cool new features for everyone.
+
+In this transition, the plugin is being renamed to TodoReview, to avoid any confusion.
+
+
+This update is the initial release of TodoReview which includes the following:
+
+- ST3 Support!
+- Fixed Setting Issues
+- Fixed Result Navigation Issues
+- Added Color Scheme Support
+- Added Preliminary Priorities Support
+- Added Tag Support
+- Modified search paths for eventual Sidebar Support
+- Code Cleanup
+
+
+This repo will be hosted at https://github.com/jonathandelgado/SublimeTodoReview. If you have any requests or issues, feel free to let me know.
+
+
+Thank you @robcowie for all your work on this plugin in the first place.
