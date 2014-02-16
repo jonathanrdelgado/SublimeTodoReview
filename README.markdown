@@ -7,10 +7,15 @@ This is a fork of [@robcowie's](https://github.com/robcowie) SublimeTodo. Unfort
 
 
 # Install
-**To be updated once on Package Control.**
+
+####[Package Control](https://sublime.wbond.net/) (Recommended)
+TodoReview is accessible on Package Control. If you do not have Package Control, follow these [instructions](https://sublime.wbond.net/installation) to install it, it's extremely useful. Once you have it installed, just bring up your command pallet, type in `Install Package` then, on the next prompt, `TodoReview` and you are set!
+
+####Git Clone
+If you are forking this project, or for whatever reason do not want to use Package Control, you can install this package this old fashion way. First, figure out where your "Packages" directory is by going to "Preferences" -> "Browse Packages" - then just run git clone as normal.
+
 
 # Config
-
 
 ## Adding comment patterns
 You can use any RegExp pattern to search by, leaving a lot of room for customization. Each pattern will generate a different group in the results page. For a lean install, only `TODO` comes in the default config. Use the example below to add your own patterns for searching.
@@ -60,7 +65,7 @@ Additionally, if you would like to exclude individual files, you can base the ex
 
 
 # Usage
-Simply open your Sublime Text 3 Command Pallet and find the `TodoReview: Generate List` command. This will, as the name explains, generate your TODO List. You can then use these results to jump to the corresponding result.
+Simply open your Sublime Text 3 Command Pallet and find the `TodoReview: Generate List` command. This will, as the name explains, generate your TODO List. You can then use these results to jump to the corresponding result. Additionally, you can right click a folder in your sidebar and select TodoReview to scan only files in that folder.
 
 ## Navigating results
 Once the list is generated, as a swift coder, you must naturally want to navigate it with your keyboard, right? Well you are in luck!

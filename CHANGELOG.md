@@ -1,3 +1,7 @@
+#Master
+ - Added install instructions
+ - Documented Sidebar Feature
+
 #2.0.2 - 02/16/14
  - Fixed Failure to load language file (#10)
  - Added Sublime Menu for Preferences (#13)
