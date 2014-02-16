@@ -1,0 +1,15 @@
+[
+	{
+		"caption": "-",
+		"id": "side-bar-end-separator"
+	},
+	{
+		"caption": "TodoReview",
+		"command": "todo_review",
+		"args": { "paths": [] }
+	},
+	{
+		"caption": "-",
+		"id": "side-bar-end-separator"
+	}
+]
