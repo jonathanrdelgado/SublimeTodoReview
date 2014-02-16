@@ -86,7 +86,6 @@ These may change in the future, but for now, this is the best way of to handle h
 
 
 # License
-All of SublimeTODO is licensed under the MIT license.
 
 Copyright (c) 2014 Jonathan Delgado
 

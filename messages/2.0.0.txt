@@ -1,7 +1,7 @@
 TodoReview 2.0.0 (PREVIOUSLY SUBLIMETODO)
 --------------------
 
-Unfortunatly, due to lack of time, the creater of SublimeTODO, @robcowie, is unable to maintain his package any longer. This is an extremely popular and useful plugin that needs an active maintainer and regular updates. @robcowie has allowed me to continue with his work, and hopefully I can both maintain and come up with some cool new features for everyone.
+Unfortunately, due to lack of time, the creator of SublimeTODO, @robcowie, is unable to maintain his package any longer. This is an extremely popular and useful plugin that needs an active maintainer and regular updates. @robcowie has allowed me to continue with his work, and hopefully I can both maintain and come up with some cool new features for everyone.
 
 In this transition, the plugin is being renamed to TodoReview, to avoid any confusion.
 
