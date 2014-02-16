@@ -145,7 +145,7 @@ class RenderResultRunCommand(sublime_plugin.TextCommand):
         d_ = dict(('{0},{1}'.format(k.a, k.b), v) for k, v in zip(regions_data[0], regions_data[1]))
         result_view.settings().set('result_regions', d_)
 
-        result_view.assign_syntax('TodoReview.hidden-tmLanguage')
+        result_view.assign_syntax('Packages/SublimeTodoReview/TodoReview.hidden-tmLanguage')
         result_view.settings().set('line_padding_bottom', 2)
         result_view.settings().set('line_padding_top', 2)
         result_view.settings().set('word_wrap', False)

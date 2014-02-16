@@ -1,3 +1,10 @@
+#Master
+ - Fixed Failure to load language file (#10)
+
+#2.0.1 - 02/15/14
+ - Fixed Syntax Load Problem
+ - Added Messages for SublimeTODO Migration
+
 #0.1.0 - 02/06/14
  - Initial Release
  - Fixed Setting Issues
