@@ -179,7 +179,11 @@ class WorkerThread(threading.Thread):
                 for idx, m in enumerate(matches, 1):
                     msg = m['match'].msg
 
-                    filepath = path.basename(m['filepath'])
+                    if settings.get('render_include_folder', True):
+                        filepath = path.dirname(m['filepath']).replace('\\', '/').split('/')
+                        filepath = filepath[len(filepath) - 1]  + '/' + path.basename(m['filepath'])
+                    else:
+                        filepath = path.basename(m['filepath'])
                     line = u"{idx}. {filepath}:{linenum} {msg}".format(idx=idx, filepath=filepath, linenum=m['linenum'], msg=msg)
                     yield ('result', line, m)
 

@@ -8,5 +8,6 @@
         ".git"
     ],
     "exclude_files": [],
-    "case_sensitive": false
+    "case_sensitive": false,
+    "render_include_folder": false
 }
