@@ -1,0 +1,27 @@
+TodoReview 2.1.0
+--------------------
+
+This is the first minor release of TodoReview and it's a feature packed one. Here are some quick bullets; the full changelog is below and documentation is at https://github.com/jonathandelgado/SublimeTodoReview
+
+As always, please report any issues.
+
+- BREAKING CHANGE: Removed support for @critical and @priority tags, replaced by the priority system.
+- Added: Priority System. Can add (0) (or any number) to any note in any position and they will be sorted by lowest first. More info on the readme.
+- Added: New command pallet option to search open files in addition to project files
+- Added: New setting, `render_include_folder` - More info on the readme.
+- Added: New setting, `render_spaces` - More info on the readme.
+- Fixed: Sidebar not being able to open files, just folders.
+- Updated Readme
+
+
+Changelog:
+ - Updated Readme
+ - Added Sort by Priority
+ - Removed priority highlighting for priority and critical tags
+ - Cleaned some code
+ - Added ability to search open files (#19)
+ - Fixed Sidebar option not working on single file (#15)
+ - Added setting `render_spaces` (#16)
+ - Added setting `render_include_folder` (#12)
+ - Added install instructions
+ - Documented Sidebar Feature
