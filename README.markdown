@@ -68,8 +68,8 @@ You can use any RegExp pattern to search by, leaving a lot of room for customiza
 "patterns": {
     "TODO": "TODO[\\s]*?:+(?P<todo>.*)$",
     "NOTE": "NOTE[\\s]*?:+(?P<note>.*)$",
-    "FIXME": "FIX ?ME[\\s]*?:+(?P<fixme>\\s.*)$",
-    "CHANGED": "CHANGED[\\s]*?:+(?P<changed>\\s.*)$"
+    "FIXME": "FIX ?ME[\\s]*?:+(?P<fixme>.*)$",
+    "CHANGED": "CHANGED[\\s]*?:+(?P<changed>.*)$"
 }
 ```
 
@@ -109,7 +109,7 @@ If you have a large project with repeating file names, it is sometimes useful to
 ```
 
 ## Align results
-If you have OCD and like things to be nicely aligned, i've included a spaces option just for you. You can set the number of spaces you would like between the line start and notes. If you usually have large filenames, it will require more spaces for your notes to be aligned and vice versa. This defaults to `1`.
+If you have OCD and like things to be nicely aligned, I've included a spaces option just for you. You can set the number of spaces you would like between the line start and notes. If you usually have large filenames, it will require more spaces for your notes to be aligned and vice versa. This defaults to `1`.
 
 ```javascript
 "render_spaces": 10

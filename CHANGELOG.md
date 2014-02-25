@@ -2,7 +2,7 @@
  - Updated Readme
  - Added Sort by Priority
  - Removed priority highlighting for priority and critical tags
- - Cleaned some code
+ - Cleaned some code and converted to tabs
  - Added ability to search open files (#19)
  - Fixed Sidebar option not working on single file (#15)
  - Added setting `render_spaces` (#16)
