@@ -1,12 +1,5 @@
-#Todo
- - Document Add Screenshot
- - Document Priority, Critical tag removal
- - Document Ability to search open files
- - Document Sidebar Fix
- - Document `render_spaces`
- - Document `render_include_folder`
-
-#Master
+#2.1.0 - 02/24/14
+ - Updated Readme
  - Added Sort by Priority
  - Removed priority highlighting for priority and critical tags
  - Cleaned some code

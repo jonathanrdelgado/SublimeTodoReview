@@ -1,6 +1,8 @@
 # TodoReview
 A SublimeText 3 plugin for reviewing todo (any other) comments within your code.
 
+![ScreenShot](http://i.imgur.com/TjGKdEH.png)
+
 **Check the issues for upcoming features**
 
 This is a fork of [@robcowie's](https://github.com/robcowie) SublimeTodo. Unfortunately, it doesn't have ST3 support and he is unable to maintain it any longer. Additionally, this includes [@dnatag's](https://github.com/dnatag) ST3 fork, which allowed me to get everything fixed relatively quickly.
@@ -15,6 +17,46 @@ TodoReview is accessible on Package Control. If you do not have Package Control,
 If you are forking this project, or for whatever reason do not want to use Package Control, you can install this package this old fashion way. First, figure out where your "Packages" directory is by going to "Preferences" -> "Browse Packages" - then just run git clone as normal.
 
 
+# Usage
+Simply open your Sublime Text 3 Command Pallet and find the `TodoReview: Project Files` command. This will generate your TODO List using all files that are currently in your project, except the ones which are excluded in your settings. If you would like to also include your open files within the search, you can use the `TodoReview: Project and Open Files` command; it's that easy! You can then use these results to jump to the corresponding result. Additionally, you can right click a file or folder in your sidebar and select TodoReview to limit your search.
+
+## Navigating results
+Once the list is generated, as a swift coder, you must naturally want to navigate it with your keyboard, right? Well you are in luck!
+
+By pressing the `up` or `down` keys, you are able to swiftly navigate the results. If you are a VIM user, you can also use `j` and `k` respectably. Once you have navigated to the result you want, simply press `enter` to open the result in a new tab, while going to the corresponding line.
+
+In the event you would like to clear your selection, you may do so by pressing `c`.
+
+##Priorities
+New in 2.1.0, results are now fully indexed and sorted. You can now add something like `(0)` to anywhere in your todo's to assign a priority of `0`. This will work with any number up to 99. Todo's are then sorted with the lowest number first; all matches that don't have priorities will be assigned a priority of 100. Here is some example output:
+
+```
++ -------------------------------------------------------- +
+| TodoReview @ Monday 02/24/14 at 07:24PM                  |
+| 12 files scanned                                         |
++ -------------------------------------------------------- +
+
+## TODO (21)
+1. testing.js:2 (0) Testing
+2. testing.js:3 (1) Testing
+3. another.js:1 Testing Again (2)
+4. testing.js:4 (99) Testing
+```
+
+##Color Scheme
+You can tag tasks using something like `@tomorrow` or `@bug`. These are only example, anything following the `@` sign, before a space, will be highlighted accordingly. If you are like me, you also would like one more option, just in the event something really needs to stand out, perhaps a reference link, etc. You can also use `[Comment]` or `[Need To Test]` for another type of reference as needed. Unlike tags with the `@` sign, you can use spaces between brackets.
+
+The way that these are colored depends on your color scheme. It's been a pain point of sublime text for quite some time that plugins are unable to influence the color scheme without some manual edits. I use and would recommend the [Tomorrow Night](https://github.com/theymaybecoders/sublime-tomorrow-theme) color scheme. However, if you are not, here are the corresponding colors these tags will be:
+
+- **Titles** Same color as a *string*
+- **Line Numbers** Same color as a *function*
+- **Priority** same color as a *variable*
+- **Bracket Tags** same color as a *class*
+- **@ Tags** same color as a *keyword*
+
+These may change in the future, but for now, this is the best way of to handle highlighting differences.
+
+
 # Config
 
 ## Adding comment patterns
@@ -26,20 +68,10 @@ You can use any RegExp pattern to search by, leaving a lot of room for customiza
 "patterns": {
     "TODO": "TODO[\\s]*?:+(?P<todo>.*)$",
     "NOTE": "NOTE[\\s]*?:+(?P<note>.*)$",
-    "FIXME": "FIX ?ME[\\s]*?:+(?P<fixme>\\S.*)$",
-    "CHANGED": "CHANGED[\\s]*?:+(?P<changed>\\S.*)$"
+    "FIXME": "FIX ?ME[\\s]*?:+(?P<fixme>\\s.*)$",
+    "CHANGED": "CHANGED[\\s]*?:+(?P<changed>\\s.*)$"
 }
 ```
-
-
-## Case Sensitive
-By default, searching is not case sensitive. If you would like it to force case, you can add the following to your config.
-
-```javascript
-"case_sensitive": true
-```
-
-
 
 ## Excluding files and folders
 Obviously, some files or folders might need to be excluded from your search. An example would be your `.git` folder, which has tons of files that will take time to search, with results you most likely will not want.
@@ -62,35 +94,31 @@ Additionally, if you would like to exclude individual files, you can base the ex
 ]
 ```
 
+## Case Sensitive
+By default, searching is not case sensitive. If you would like it to force case, you can add the following to your config. This defaults to `false`.
 
+```javascript
+"case_sensitive": true
+```
 
-# Usage
-Simply open your Sublime Text 3 Command Pallet and find the `TodoReview: Generate List` command. This will, as the name explains, generate your TODO List. You can then use these results to jump to the corresponding result. Additionally, you can right click a folder in your sidebar and select TodoReview to scan only files in that folder.
+## Include folders in results
+If you have a large project with repeating file names, it is sometimes useful to also have the file's folder displayed in the results. This would turn the result `index.js:1` to `lib/index.js:`. Results are sorted alphabetically to group folders and files together. Please note that results are sorted by priority first. This defaults to `false`.
 
-## Navigating results
-Once the list is generated, as a swift coder, you must naturally want to navigate it with your keyboard, right? Well you are in luck!
+```javascript
+"render_include_folder": true
+```
 
-By pressing the `up` or `down` keys, you are able to swiftly navigate the results. If you are a VIM user, you can also use `j` and `k` respectably. Once you have navigated to the result you want, simply press `enter` to open the result in a new tab, while going to the corresponding line.
+## Align results
+If you have OCD and like things to be nicely aligned, i've included a spaces option just for you. You can set the number of spaces you would like between the line start and notes. If you usually have large filenames, it will require more spaces for your notes to be aligned and vice versa. This defaults to `1`.
 
-In the event you would like to clear your selection, you may do so by pressing `c`.
-
-##Color Scheme
-One new feature that wasn't on SublimeTodo is the ability to tag and prioritize tasks (or whatever you are searching for). For the initial release, you are able to use `@priority`, `@critical` or `[priority]`, `[critical]` to keep track of your more important tasks. Right now, this only turns it a unique color, but down the line, the system will actually sort results with a priority hierarchy.
-
-Additionally, you can tag tasks using something like `@tomorrow` or `@bug`. These are only example, anything following the `@` sign, before a space, will be highlighted accordingly. If you are like me, you also would like one more option, just in the event something really needs to stand out, perhaps a reference link, etc. You can also use `[Comment]` or `[Need To Test]` for another type of reference as needed. Unlike tags with the `@` sign, you can use spaces between brackets.
-
-The way that these are colored depends on your color scheme. It's been a pain point of sublime text for quite some time that plugins are unable to influence the color scheme without some manual edits. I use and would recommend the [Tomorrow Night](https://github.com/theymaybecoders/sublime-tomorrow-theme) color scheme. However, if you are not, here are the corresponding colors these tags will be:
-
-- **Titles** Same color as a *string*
-- **Line Numbers** Same color as a *function*
-- **Priority** same color as a *variable*
-- **Bracket Tags** same color as a *class*
-- **@ Tags** same color as a *keyword*
-
-These may change in the future, but for now, this is the best way of to handle highlighting differences.
+```javascript
+"render_spaces": 10
+```
 
 
 # License
+
+The MIT License (MIT)
 
 Copyright (c) 2014 Jonathan Delgado
 
