@@ -52,8 +52,9 @@ class ThreadProgress(object):
         sublime.set_timeout(lambda: self.run(i), 100)
 
 class TodoExtractor(object):
-    def __init__(self, dirpaths, file_counter):
+    def __init__(self, dirpaths, filepaths, file_counter):
         self.dirpaths = dirpaths
+        self.filepaths = filepaths
         self.patterns = settings.get('patterns', {})
         self.file_counter = file_counter
         self.ignored_dirs = settings.get('exclude_folders', [])
@@ -61,13 +62,17 @@ class TodoExtractor(object):
 
     def iter_files(self):
         seen_paths_ = []
-        dirs = self.dirpaths
-        exclude_dirs = self.ignored_dirs
 
-        for dirpath in dirs:
+        for filepath in self.filepaths:
+            pth = path.realpath(path.abspath(filepath))
+            if pth not in seen_paths_:
+                seen_paths_.append(pth)
+                yield pth
+
+        for dirpath in self.dirpaths:
             dirpath = path.abspath(dirpath)
             for dirpath, dirnames, filenames in walk(dirpath):
-                for dir in exclude_dirs:
+                for dir in self.ignored_dirs:
                     if dir in dirnames:
                         dirnames.remove(dir)
 
@@ -210,19 +215,25 @@ class FileScanCounter(object):
             self.ct = 0
 
 class TodoReviewCommand(sublime_plugin.TextCommand):
-    def run(self, edit, paths=False):
+    def run(self, edit, paths=False, open_files=False):
         global settings
-        settings = sublime.load_settings('TodoReview.sublime-settings')
-        # Keep settings here - in the event that this plugin is used before settings are init'd
+        filepaths = []
 
+        settings = sublime.load_settings('TodoReview.sublime-settings')
         window = self.view.window()
+
+        if open_files:
+            filepaths = [view.file_name() for view in window.views() if view.file_name()]
 
         if not paths:
             paths = window.folders()
-
+        else:
+            for p in paths:
+                if path.isfile(p):
+                    filepaths.append(p)
 
         file_counter = FileScanCounter()
-        extractor = TodoExtractor(paths, file_counter)
+        extractor = TodoExtractor(paths, filepaths, file_counter)
 
         worker_thread = WorkerThread(extractor, self.render_formatted, file_counter)
         worker_thread.start()

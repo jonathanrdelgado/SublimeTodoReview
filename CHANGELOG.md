@@ -1,10 +1,15 @@
 #Todo
+ - Document Ability to search open files
+ - Document Sidebar Fix
  - Document `render_spaces`
  - Document `render_include_folder`
 
 #Master
- - Added setting `render_spaces`
- - Added setting `render_include_folder`
+ - Cleaned some code
+ - Added ability to search open files (#19)
+ - Fixed Sidebar option not working on single file (#15)
+ - Added setting `render_spaces` (#16)
+ - Added setting `render_include_folder` (#12)
  - Added install instructions
  - Documented Sidebar Feature
 
