@@ -179,12 +179,13 @@ class WorkerThread(threading.Thread):
                 for idx, m in enumerate(matches, 1):
                     msg = m['match'].msg
 
-                    if settings.get('render_include_folder', True):
+                    if settings.get('render_include_folder', False):
                         filepath = path.dirname(m['filepath']).replace('\\', '/').split('/')
                         filepath = filepath[len(filepath) - 1]  + '/' + path.basename(m['filepath'])
                     else:
                         filepath = path.basename(m['filepath'])
-                    line = u"{idx}. {filepath}:{linenum} {msg}".format(idx=idx, filepath=filepath, linenum=m['linenum'], msg=msg)
+                    spaces = ' '*(settings.get('render_spaces', 1) - len(filepath + ':' + str(m['linenum'])))
+                    line = u"{idx}. {filepath}:{linenum}{spaces}{msg}".format(idx=idx, filepath=filepath, linenum=m['linenum'], spaces=spaces, msg=msg)
                     yield ('result', line, m)
 
 class FileScanCounter(object):

@@ -9,5 +9,6 @@
     ],
     "exclude_files": [],
     "case_sensitive": false,
-    "render_include_folder": false
+    "render_include_folder": false,
+    "render_spaces": 1
 }

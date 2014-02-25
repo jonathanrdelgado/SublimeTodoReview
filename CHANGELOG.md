@@ -1,7 +1,9 @@
 #Todo
+ - Document `render_spaces`
  - Document `render_include_folder`
 
 #Master
+ - Added setting `render_spaces`
  - Added setting `render_include_folder`
  - Added install instructions
  - Documented Sidebar Feature
