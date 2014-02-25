@@ -98,6 +98,7 @@ class TodoExtractor(object):
         message_patterns = '|'.join(self.patterns.values())
         case_sensitivity = 0 if settings.get('case_sensitive', False) else re.IGNORECASE
         patt = re.compile(message_patterns, case_sensitivity)
+        patt_priority = re.compile(r'\(([0-9]{1,2})\)')
         for filepath in self.search_targets():
             try:
                 f = open(filepath, 'r', encoding='utf-8')
@@ -105,8 +106,20 @@ class TodoExtractor(object):
                     for mo in patt.finditer(line):
                         # Remove the non-matched groups
                         matches = [Message(msg_type, msg) for msg_type, msg in mo.groupdict().items() if msg]
-                        for match in matches:
-                            yield {'filepath': filepath, 'linenum': linenum + 1, 'match': match}
+                        for matchi in matches:
+                            priority = patt_priority.search(matchi.msg)
+
+                            if priority:
+                                priority = int(priority.group(0).replace('(', '').replace(')', ''))
+                            else:
+                                priority = 100
+
+                            yield {
+                                'filepath': filepath,
+                                'linenum': linenum + 1,
+                                'match': matchi,
+                                'priority': priority
+                            }
             except (IOError, UnicodeDecodeError):
                 f = None
             finally:
@@ -157,7 +170,6 @@ class RenderResultRunCommand(sublime_plugin.TextCommand):
         result_view.settings().set('command_mode', True)
         active_window.focus_view(result_view)
 
-
 class WorkerThread(threading.Thread):
 
     def __init__(self, extractor, callback, file_counter):
@@ -174,10 +186,9 @@ class WorkerThread(threading.Thread):
         sublime.set_timeout(functools.partial(self.callback, formatted, self.file_counter), 10)
 
     def format(self, messages):
-        key_func = lambda m: m['match'].type
-        messages = sorted(messages, key=key_func)
+        messages = sorted(messages, key=lambda m: (m['priority'], m['match'].type))
 
-        for message_type, matches in groupby(messages, key=key_func):
+        for message_type, matches in groupby(messages, key=lambda m: m['match'].type):
             matches = list(matches)
             if matches:
                 yield ('header', u'\n## {0} ({1})'.format(message_type.upper(), len(matches)), {})

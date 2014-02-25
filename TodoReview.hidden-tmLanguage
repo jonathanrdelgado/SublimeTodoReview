@@ -32,7 +32,7 @@
             <string>Priority</string>
 
             <key>match</key>
-            <string>(?i)\[critical\]|(?i)\[priority\]|(?i)\@critical|(?i)\@priority</string>
+            <string>\(([0-9]{1,2})\)</string>
 
             <key>name</key>
             <string>variable</string>
