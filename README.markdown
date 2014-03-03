@@ -41,6 +41,7 @@ New in 2.1.0, results are now fully indexed and sorted. You can now add somethin
 2. testing.js:3 (1) Testing
 3. another.js:1 Testing Again (2)
 4. testing.js:4 (99) Testing
+5. testing.js:5 No priority
 ```
 
 ##Color Scheme
@@ -102,7 +103,7 @@ By default, searching is not case sensitive. If you would like it to force case,
 ```
 
 ## Include folders in results
-If you have a large project with repeating file names, it is sometimes useful to also have the file's folder displayed in the results. This would turn the result `index.js:1` to `lib/index.js:`. Results are sorted alphabetically to group folders and files together. Please note that results are sorted by priority first. This defaults to `false`.
+If you have a large project with repeating file names, it is sometimes useful to also have the file's folder displayed in the results. This would turn the result `index.js:1` to `lib/index.js:1`. Results are sorted alphabetically to group folders and files together. Please note that results are sorted by priority first. This defaults to `false`.
 
 ```javascript
 "render_include_folder": true
@@ -113,6 +114,17 @@ If you have OCD and like things to be nicely aligned, I've included a spaces opt
 
 ```javascript
 "render_spaces": 10
+```
+
+##Keyboard Shortcuts
+I didn't provide a standard key bind with TodoReview due to the high likelyhood of confliction with other plugins. If you would like a shortcut, you can add the following snippit to your ST3 User Key Bindings (under the preference menu). You can play around with the arguments that you would like, it currently accepts `paths` and `open_files`.
+
+```
+{
+  "keys": ["ctrl+shift+t"],
+  "command": "todo_review",
+  "args": {"open_files": true}
+},
 ```
 
 
