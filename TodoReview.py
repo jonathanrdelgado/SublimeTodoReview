@@ -200,7 +200,10 @@ class WorkerThread(threading.Thread):
 						filepath = filepath[len(filepath) - 1]  + '/' + path.basename(m['filepath'])
 					else:
 						filepath = path.basename(m['filepath'])
-					spaces = ' '*(settings.get('render_spaces', 1) - len(filepath + ':' + str(m['linenum'])))
+
+					extraSpaces = 3 - len(str(idx));
+					
+					spaces = ' '*((settings.get('render_spaces', 1) + extraSpaces) - len(filepath + ':' + str(m['linenum'])))
 					line = u"{idx}. {filepath}:{linenum}{spaces}{msg}".format(idx=idx, filepath=filepath, linenum=m['linenum'], spaces=spaces, msg=msg)
 					yield ('result', line, m)
 
