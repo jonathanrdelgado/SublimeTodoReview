@@ -2,7 +2,7 @@
 SublimeTodoReview
 A SublimeText 3 plugin for reviewing todo (any other) comments within your code.
 
-@author Jonathan Delgado (Initial Repo by @robcowie and ST3 update by @dnatag)
+@author Jonathan Delgado (Initial Repo by @robcowie and ST3 update by @dnatag and @nemesarial)
 '''
 
 from collections import namedtuple
@@ -200,10 +200,7 @@ class WorkerThread(threading.Thread):
 						filepath = filepath[len(filepath) - 1]  + '/' + path.basename(m['filepath'])
 					else:
 						filepath = path.basename(m['filepath'])
-
-					extraSpaces = 3 - len(str(idx));
-					
-					spaces = ' '*((settings.get('render_spaces', 1) + extraSpaces) - len(filepath + ':' + str(m['linenum'])))
+					spaces = ' '*(settings.get('render_spaces', 1) - len(filepath + ':' + str(m['linenum'])))
 					line = u"{idx}. {filepath}:{linenum}{spaces}{msg}".format(idx=idx, filepath=filepath, linenum=m['linenum'], spaces=spaces, msg=msg)
 					yield ('result', line, m)
 
@@ -229,7 +226,7 @@ class FileScanCounter(object):
 			self.ct = 0
 
 class TodoReviewCommand(sublime_plugin.TextCommand):
-	def run(self, edit, paths=False, open_files=False):
+	def run(self, edit, paths=False, open_files=False, open_files_only=False):
 		global settings
 		filepaths = []
 
@@ -239,12 +236,15 @@ class TodoReviewCommand(sublime_plugin.TextCommand):
 		if open_files:
 			filepaths = [view.file_name() for view in window.views() if view.file_name()]
 
-		if not paths:
-			paths = window.folders()
+		if not open_files_only :
+			if not paths:
+				paths = window.folders()
+			else:
+				for p in paths:
+					if path.isfile(p):
+						filepaths.append(p)
 		else:
-			for p in paths:
-				if path.isfile(p):
-					filepaths.append(p)
+			paths = []
 
 		file_counter = FileScanCounter()
 		extractor = TodoExtractor(paths, filepaths, file_counter)
