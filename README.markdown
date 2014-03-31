@@ -117,13 +117,13 @@ If you have OCD and like things to be nicely aligned, I've included a spaces opt
 ```
 
 ##Keyboard Shortcuts
-I didn't provide a standard key bind with TodoReview due to the high likelyhood of confliction with other plugins. If you would like a shortcut, you can add the following snippit to your ST3 User Key Bindings (under the preference menu). You can play around with the arguments that you would like, it currently accepts `paths` and `open_files`.
+I didn't provide a standard key bind with TodoReview due to the high likelyhood of confliction with other plugins. If you would like a shortcut, you can add the following snippit to your ST3 User Key Bindings (under the preference menu). You can play around with the arguments that you would like, it currently accepts `paths` and `open_files` and `open_files_only`.
 
 ```
 {
   "keys": ["ctrl+shift+t"],
   "command": "todo_review",
-  "args": {"open_files": true}
+  "args": {"open_files": true, "open_files_only": false}
 },
 ```
 
