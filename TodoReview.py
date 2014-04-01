@@ -57,14 +57,15 @@ class TodoExtractor(object):
 		self.filepaths = filepaths
 		self.patterns = settings.get('patterns', {})
 		self.file_counter = file_counter
-		self.ignored_dirs = settings.get('exclude_folders', [])
 		self.ignored_files = [fnmatch.translate(patt) for patt in settings.get('exclude_files', [])]
+		self.ignored_folders = [fnmatch.translate(patt) for patt in settings.get('exclude_folders', [])]
 
 	def iter_files(self):
 		seen_paths_ = []
+		exclude_folders = [re.compile(patt) for patt in self.ignored_folders]
 
 		for filepath in self.filepaths:
-			pth = path.realpath(path.abspath(filepath))
+			pth = path.realpath(path.expanduser(path.abspath(filepath)))
 			if pth not in seen_paths_:
 				seen_paths_.append(pth)
 				yield pth
@@ -72,22 +73,22 @@ class TodoExtractor(object):
 		for dirpath in self.dirpaths:
 			dirpath = path.abspath(dirpath)
 			for dirpath, dirnames, filenames in walk(dirpath):
-				for dir in self.ignored_dirs:
-					if dir in dirnames:
-						dirnames.remove(dir)
+
+				if any(patt.search(dirpath) for patt in exclude_folders):
+					continue
 
 				for filepath in filenames:
 					pth = path.join(dirpath, filepath)
-					pth = path.realpath(path.abspath(pth))
+					pth = path.realpath(path.expanduser(path.abspath(pth)))
 					if pth not in seen_paths_:
 						seen_paths_.append(pth)
 						yield pth
 
 	def filter_files(self, files):
-		exclude_patterns = [re.compile(patt) for patt in self.ignored_files]
+		exclude_files = [re.compile(patt) for patt in self.ignored_files]
 
 		for filepath in files:
-			if any(patt.search(filepath) for patt in exclude_patterns):
+			if any(patt.search(filepath) for patt in exclude_files):
 				continue
 			yield filepath
 
@@ -104,7 +105,7 @@ class TodoExtractor(object):
 				f = open(filepath, 'r', encoding='utf-8')
 				for linenum, line in enumerate(f):
 					for mo in patt.finditer(line):
-						# Remove the non-matched groups
+
 						matches = [Message(msg_type, msg) for msg_type, msg in mo.groupdict().items() if msg]
 						for matchi in matches:
 							priority = patt_priority.search(matchi.msg)
@@ -147,9 +148,8 @@ class RenderResultRunCommand(sublime_plugin.TextCommand):
 
 		regions_data = [x[:] for x in [[]] * 2]
 
-		# Result sections
+
 		for linetype, line, data in formatted_results:
-			# edit = result_view.begin_edit()
 			insert_point = result_view.size()
 			result_view.insert(edit, insert_point, line)
 			if linetype == 'result':
@@ -182,8 +182,7 @@ class WorkerThread(threading.Thread):
 
 		todos = self.extractor.extract()
 		formatted = list(self.format(todos))
-
-		sublime.set_timeout(functools.partial(self.callback, formatted, self.file_counter), 10)
+		self.callback(formatted, self.file_counter)
 
 	def format(self, messages):
 		messages = sorted(messages, key=lambda m: (m['priority'], m['match'].type))
@@ -202,7 +201,7 @@ class WorkerThread(threading.Thread):
 						filepath = path.basename(m['filepath'])
 
 					extraSpaces = 3 - len(str(idx));
-					
+
 					spaces = ' '*((settings.get('render_spaces', 1) + extraSpaces) - len(filepath + ':' + str(m['linenum'])))
 					line = u"{idx}. {filepath}:{linenum}{spaces}{msg}".format(idx=idx, filepath=filepath, linenum=m['linenum'], spaces=spaces, msg=msg)
 					yield ('result', line, m)
@@ -229,22 +228,25 @@ class FileScanCounter(object):
 			self.ct = 0
 
 class TodoReviewCommand(sublime_plugin.TextCommand):
-	def run(self, edit, paths=False, open_files=False):
+	def run(self, edit, paths=False, open_files=False, open_files_only=False):
 		global settings
 		filepaths = []
 
 		settings = sublime.load_settings('TodoReview.sublime-settings')
-		window = self.view.window()
+		self.window = self.view.window()
 
 		if open_files:
-			filepaths = [view.file_name() for view in window.views() if view.file_name()]
+			filepaths = [view.file_name() for view in self.window.views() if view.file_name()]
 
-		if not paths:
-			paths = window.folders()
+		if not open_files_only:
+			if not paths:
+				paths = self.window.folders()
+			else:
+				for p in paths:
+					if path.isfile(p):
+						filepaths.append(p)
 		else:
-			for p in paths:
-				if path.isfile(p):
-					filepaths.append(p)
+			paths = []
 
 		file_counter = FileScanCounter()
 		extractor = TodoExtractor(paths, filepaths, file_counter)
@@ -254,7 +256,7 @@ class TodoReviewCommand(sublime_plugin.TextCommand):
 		ThreadProgress(worker_thread, 'Finding TODOs', '', file_counter)
 
 	def render_formatted(self, rendered, counter):
-		self.view.run_command("render_result_run", {"formatted_results": rendered, "file_counter": str(counter)})
+		self.window.run_command("render_result_run", {"formatted_results": rendered, "file_counter": str(counter)})
 
 class NavigateResults(sublime_plugin.TextCommand):
 	DIRECTION = {'forward': 1, 'backward': -1}
@@ -282,6 +284,7 @@ class NavigateResults(sublime_plugin.TextCommand):
 		settings.set('selected_result', selection)
 		target = target.cover(target)
 		view.add_regions('selection', [target], 'selected', 'dot')
+		target.b = target.a + 5
 		view.show(target)
 
 class ClearSelection(sublime_plugin.TextCommand):

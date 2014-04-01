@@ -1,0 +1,30 @@
+TodoReview 2.1.1
+--------------------
+
+This is an incremental release with some fixes. Here are some quick bullets; the full changelog is below and documentation is at https://github.com/jonathandelgado/SublimeTodoReview
+
+As always, please report any issues.
+
+
+BREAKING CHANGE: This version added the ability to glob `exclude_folders` - please update your local settings accordingly. Example below.
+Prior to this, `exclude_folders` could only exclude a root folders, but now, any glob can be excluded in the same way as `exclude_files`.
+
+--------------------------------------
+"exclude_folders": [ "node_modules" ]
+---------SHOULD BE CHANGED TO---------
+"exclude_folders": [ "*node_modules*" ]
+-------------------------------------
+
+
+# 2.1.1 - 04/01/14
+- Upd: Default settings to reflect new glob type of `exclude_folders`
+- Add: Documentation surrounding `open_files_only` and `exclude_folders`
+- Add: Ability to glob `exclude_folders`
+- Add: `open_files_only` setting. Thanks @Nemesarial (#32)
+- Add: Ability to use shortcut directories (#31)
+- Del: Random comments left over from 2.0.0 migration
+- Fix: Navigation no longer scrolls the display horizontally (#28)
+- Fix: Removed Async for display, should fix (#22)
+- Upd: Refactored Spaces for index fix (#30)
+- Upd: Readme
+- Upd: Changelog Formatting

@@ -77,12 +77,12 @@ You can use any RegExp pattern to search by, leaving a lot of room for customiza
 ## Excluding files and folders
 Obviously, some files or folders might need to be excluded from your search. An example would be your `.git` folder, which has tons of files that will take time to search, with results you most likely will not want.
 
-To exclude directories, add the directory name to `exclude_folders`. Please note, this is not a glob or RegExp field. A preset for your `.git` folder has already been added for you. An example of this:
+To exclude directories, add the directory name to `exclude_folders`. This is a glob field, so make sure to add wildcards where needed. A preset for your `.git` folder has already been added for you. An example of this:
 
 ```javascript
 "exclude_folders": [
-    ".git",
-    "node_modules"
+    "*.git*",
+    "*node_modules*"
 ]
 ```
 
@@ -117,13 +117,13 @@ If you have OCD and like things to be nicely aligned, I've included a spaces opt
 ```
 
 ##Keyboard Shortcuts
-I didn't provide a standard key bind with TodoReview due to the high likelyhood of confliction with other plugins. If you would like a shortcut, you can add the following snippit to your ST3 User Key Bindings (under the preference menu). You can play around with the arguments that you would like, it currently accepts `paths` and `open_files`.
+I didn't provide a standard key bind with TodoReview due to the high likelyhood of confliction with other plugins. If you would like a shortcut, you can add the following snippit to your ST3 User Key Bindings (under the preference menu). You can play around with the arguments that you would like, it currently accepts `paths`, `open_files` and `open_files_only`.
 
-```
+```javascript
 {
-  "keys": ["ctrl+shift+t"],
-  "command": "todo_review",
-  "args": {"open_files": true}
+	"keys": [ "ctrl+shift+t" ],
+	"command": "todo_review",
+	"args": { "open_files": true }
 },
 ```
 
