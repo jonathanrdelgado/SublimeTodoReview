@@ -10,10 +10,10 @@ This is a fork of [@robcowie's](https://github.com/robcowie) SublimeTodo. Unfort
 
 # Install
 
-####[Package Control](https://sublime.wbond.net/) (Recommended)
+#### [Package Control](https://sublime.wbond.net/) (Recommended)
 TodoReview is accessible on Package Control. If you do not have Package Control, follow these [instructions](https://sublime.wbond.net/installation) to install it, it's extremely useful. Once you have it installed, just bring up your command pallet, type in `Install Package` then, on the next prompt, `TodoReview` and you are set!
 
-####Git Clone
+#### Git Clone
 If you are forking this project, or for whatever reason do not want to use Package Control, you can install this package this old fashion way. First, figure out where your "Packages" directory is by going to "Preferences" -> "Browse Packages" - then just run git clone as normal.
 
 
@@ -27,7 +27,7 @@ By pressing the `up` or `down` keys, you are able to swiftly navigate the result
 
 In the event you would like to clear your selection, you may do so by pressing `c`.
 
-##Priorities
+## Priorities
 New in 2.1.0, results are now fully indexed and sorted. You can now add something like `(0)` to anywhere in your todo's to assign a priority of `0`. This will work with any number up to 99. Todo's are then sorted with the lowest number first; all matches that don't have priorities will be assigned a priority of 100. Here is some example output:
 
 ```
@@ -44,7 +44,7 @@ New in 2.1.0, results are now fully indexed and sorted. You can now add somethin
 5. testing.js:5 No priority
 ```
 
-##Color Scheme
+## Color Scheme
 You can tag tasks using something like `@tomorrow` or `@bug`. These are only example, anything following the `@` sign, before a space, will be highlighted accordingly. If you are like me, you also would like one more option, just in the event something really needs to stand out, perhaps a reference link, etc. You can also use `[Comment]` or `[Need To Test]` for another type of reference as needed. Unlike tags with the `@` sign, you can use spaces between brackets.
 
 The way that these are colored depends on your color scheme. It's been a pain point of sublime text for quite some time that plugins are unable to influence the color scheme without some manual edits. I use and would recommend the [Tomorrow Night](https://github.com/theymaybecoders/sublime-tomorrow-theme) color scheme. However, if you are not, here are the corresponding colors these tags will be:
@@ -116,14 +116,21 @@ If you have OCD and like things to be nicely aligned, I've included a spaces opt
 "render_spaces": 10
 ```
 
-##Keyboard Shortcuts
-I didn't provide a standard key bind with TodoReview due to the high likelyhood of confliction with other plugins. If you would like a shortcut, you can add the following snippit to your ST3 User Key Bindings (under the preference menu). You can play around with the arguments that you would like, it currently accepts `paths`, `open_files` and `open_files_only`.
+## Prevent Project Imports
+TodoReview automatically imports `folder_exclude_patterns` and `file_exclude_patterns` from your sublime project settings. In the event you wish to process those files, you can disable that functionality using the following.
+
+```javascript
+"disable_project_import": true
+```
+
+## Keyboard Shortcuts And Other Actions
+I didn't provide a standard key bind with TodoReview due to the high likelyhood of confliction with other plugins. If you would like a shortcut, you can add the following snippit to your ST3 User Key Bindings (under the preference menu). In addition to keybinds, you can create custom sidebar, pallet, mouse, etc. commands using this same syntax; for more information, check out the SublimeText documentation. You can play around with the arguments that you would like, it currently accepts `paths`, `open_files` and `open_files_only`.
 
 ```javascript
 {
 	"keys": [ "ctrl+shift+t" ],
 	"command": "todo_review",
-	"args": { "open_files": true }
+	"args": { "paths": [], "open_files": true }
 },
 ```
 

@@ -57,8 +57,22 @@ class TodoExtractor(object):
 		self.filepaths = filepaths
 		self.patterns = settings.get('patterns', {})
 		self.file_counter = file_counter
-		self.ignored_files = [fnmatch.translate(patt) for patt in settings.get('exclude_files', [])]
-		self.ignored_folders = [fnmatch.translate(patt) for patt in settings.get('exclude_folders', [])]
+		self.ignored_files = settings.get('exclude_files', [])
+		self.ignored_folders = settings.get('exclude_folders', [])
+
+		if not settings.get('disable_project_import', False):
+			for s in sublime.active_window().project_data()['folders']:
+
+				if s.get('folder_exclude_patterns'):
+					for tfo in s.get('folder_exclude_patterns'):
+						self.ignored_folders.append(s.get('path').replace('.', '') + '*' + tfo + '*')
+
+				if s.get('file_exclude_patterns'):
+					for tfi in s.get('file_exclude_patterns'):
+						self.ignored_files.append(tfi)
+
+		self.ignored_files = [fnmatch.translate(patt) for patt in self.ignored_files]
+		self.ignored_folders = [fnmatch.translate(patt) for patt in self.ignored_folders]
 
 	def iter_files(self):
 		seen_paths_ = []

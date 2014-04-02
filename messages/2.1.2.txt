@@ -1,0 +1,13 @@
+TodoReview 2.1.2
+--------------------
+
+Documentation is at https://github.com/jonathandelgado/SublimeTodoReview
+As always, please report any issues.
+
+
+# 2.1.2 - 04/02/14
+- Add: Ability to import project exclusions for files and folders (#33, #25)
+- Add: Setting to control project importing
+- Add: Documentation on project setting importing
+- Upd: Added claification on other actions readme
+- Upd: Fixed readme markdown headers

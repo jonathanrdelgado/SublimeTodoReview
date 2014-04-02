@@ -1,3 +1,10 @@
+# 2.1.2 - 04/02/14
+- Add: Ability to import project exclusions for files and folders (#33, #25)
+- Add: Setting to control project importing
+- Add: Documentation on project setting importing
+- Upd: Added claification on other actions readme
+- Upd: Fixed readme markdown headers
+
 # 2.1.1 - 04/01/14
 - Upd: Default settings to reflect new glob type of `exclude_folders`
 - Add: Documentation surrounding `open_files_only` and `exclude_folders`
