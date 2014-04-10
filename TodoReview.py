@@ -61,7 +61,7 @@ class TodoExtractor(object):
 		self.ignored_folders = settings.get('exclude_folders', [])
 
 		if not settings.get('disable_project_import', False):
-			for s in sublime.active_window().project_data()['folders']:
+			for s in sublime.active_window().project_data().get('folders', []):
 
 				if s.get('folder_exclude_patterns'):
 					for tfo in s.get('folder_exclude_patterns'):
