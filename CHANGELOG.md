@@ -1,3 +1,12 @@
+# 2.1.3 - 04/17/14
+- Add: Documentation for regex101 (#40)
+- Add: Documentation for `include_paths` and project settings
+- Add: Project settings support (#25, #33)
+- Add: `include_paths` setting (#34)
+- Del: Project import, use project settings (#37, #38, #39)
+- Del: Project import readme
+- Upd: Fixed formatting
+
 # 2.1.2 - 04/02/14
 - Add: Ability to import project exclusions for files and folders (#33, #25)
 - Add: Setting to control project importing

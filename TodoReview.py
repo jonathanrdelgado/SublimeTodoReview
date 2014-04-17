@@ -24,6 +24,14 @@ def do_when(conditional, callback, *args, **kwargs):
 		return callback(*args, **kwargs)
 	sublime.set_timeout(functools.partial(do_when, conditional, callback, *args, **kwargs), 50)
 
+class Settings():
+	def __init__(self, window):
+		self.user = sublime.load_settings('TodoReview.sublime-settings')
+		self.proj = window.project_data().get('settings', {'todoreview': None}).get('todoreview', None);
+
+	def get(self, item, default):
+		return self.proj.get(item, self.user.get(item, default));
+
 class ThreadProgress(object):
 	def __init__(self, thread, message, success_message, file_counter):
 		self.thread = thread
@@ -57,22 +65,8 @@ class TodoExtractor(object):
 		self.filepaths = filepaths
 		self.patterns = settings.get('patterns', {})
 		self.file_counter = file_counter
-		self.ignored_files = settings.get('exclude_files', [])
-		self.ignored_folders = settings.get('exclude_folders', [])
-
-		if not settings.get('disable_project_import', False):
-			for s in sublime.active_window().project_data()['folders']:
-
-				if s.get('folder_exclude_patterns'):
-					for tfo in s.get('folder_exclude_patterns'):
-						self.ignored_folders.append(s.get('path').replace('.', '') + '*' + tfo + '*')
-
-				if s.get('file_exclude_patterns'):
-					for tfi in s.get('file_exclude_patterns'):
-						self.ignored_files.append(tfi)
-
-		self.ignored_files = [fnmatch.translate(patt) for patt in self.ignored_files]
-		self.ignored_folders = [fnmatch.translate(patt) for patt in self.ignored_folders]
+		self.ignored_files = [fnmatch.translate(patt) for patt in settings.get('exclude_files', [])]
+		self.ignored_folders = [fnmatch.translate(patt) for patt in settings.get('exclude_folders', [])]
 
 	def iter_files(self):
 		seen_paths_ = []
@@ -217,7 +211,7 @@ class WorkerThread(threading.Thread):
 					extraSpaces = 3 - len(str(idx));
 
 					spaces = ' '*((settings.get('render_spaces', 1) + extraSpaces) - len(filepath + ':' + str(m['linenum'])))
-					line = u"{idx}. {filepath}:{linenum}{spaces}{msg}".format(idx=idx, filepath=filepath, linenum=m['linenum'], spaces=spaces, msg=msg)
+					line = u'{idx}. {filepath}:{linenum}{spaces}{msg}'.format(idx=idx, filepath=filepath, linenum=m['linenum'], spaces=spaces, msg=msg)
 					yield ('result', line, m)
 
 class FileScanCounter(object):
@@ -244,10 +238,14 @@ class FileScanCounter(object):
 class TodoReviewCommand(sublime_plugin.TextCommand):
 	def run(self, edit, paths=False, open_files=False, open_files_only=False):
 		global settings
-		filepaths = []
 
-		settings = sublime.load_settings('TodoReview.sublime-settings')
+		filepaths = []
 		self.window = self.view.window()
+		settings = Settings(self.window);
+
+		if not paths:
+			if settings.get('include_paths', False):
+				paths = settings.get('include_paths', False);
 
 		if open_files:
 			filepaths = [view.file_name() for view in self.window.views() if view.file_name()]
@@ -270,7 +268,7 @@ class TodoReviewCommand(sublime_plugin.TextCommand):
 		ThreadProgress(worker_thread, 'Finding TODOs', '', file_counter)
 
 	def render_formatted(self, rendered, counter):
-		self.window.run_command("render_result_run", {"formatted_results": rendered, "file_counter": str(counter)})
+		self.window.run_command('render_result_run', {'formatted_results': rendered, 'file_counter': str(counter)})
 
 class NavigateResults(sublime_plugin.TextCommand):
 	DIRECTION = {'forward': 1, 'backward': -1}
@@ -316,4 +314,4 @@ class GotoComment(sublime_plugin.TextCommand):
 		selected_region = self.view.get_regions('results')[selection]
 		data = self.view.settings().get('result_regions')['{0},{1}'.format(selected_region.a, selected_region.b)]
 		new_view = self.view.window().open_file(data['filepath'])
-		do_when(lambda: not new_view.is_loading(), lambda:new_view.run_command("goto_line", {"line": data['linenum']}))
+		do_when(lambda: not new_view.is_loading(), lambda:new_view.run_command('goto_line', {'line': data['linenum']}))

@@ -59,9 +59,24 @@ These may change in the future, but for now, this is the best way of to handle h
 
 
 # Config
+Global configuration can be set within the standard package settings menu, however, this plugin also offers project specific settings. To override your global settings on a project basis, edit your `.sublime-project` file accordingly, more information on settings below:
+
+```javascript
+{
+    "folders": [],
+    "settings": {
+        "todoreview": {
+            "exclude_folders": [
+                "*.git"
+            ]
+        }
+    }
+}
+
+```
 
 ## Adding comment patterns
-You can use any RegExp pattern to search by, leaving a lot of room for customization. Each pattern will generate a different group in the results page. For a lean install, only `TODO` comes in the default config. Use the example below to add your own patterns for searching.
+You can use any RegExp pattern to search by, leaving a lot of room for customization. Each pattern will generate a different group in the results page. For a lean install, only `TODO` comes in the default config. Use the example below to add your own patterns for searching. For more information on regex, please visit [Regex 101](http://regex101.com) and try the default patterns out.
 
 **It is important to note that at least one named group must be provided and will be used to group the comments in the results**
 
@@ -95,6 +110,16 @@ Additionally, if you would like to exclude individual files, you can base the ex
 ]
 ```
 
+## Include Directories
+Though it may be unnecessary for most, I've also included a setting to override the default path, allowing for only specific folders to be searched. This is NOT a glob setting, rather absolute paths to the folders you would like searched, possibly even outside of your project. Please note, this setting is overridden by a `paths` argument being passed to the command; for example, the sidebar shortcut will still operate as normal, independent of this setting. Example of this:
+
+```javascript
+"include_paths": [
+    "~/currentproject/folder",
+    "~/Users/Jonathan/anotherfolder"
+]
+```
+
 ## Case Sensitive
 By default, searching is not case sensitive. If you would like it to force case, you can add the following to your config. This defaults to `false`.
 
@@ -114,13 +139,6 @@ If you have OCD and like things to be nicely aligned, I've included a spaces opt
 
 ```javascript
 "render_spaces": 10
-```
-
-## Prevent Project Imports
-TodoReview automatically imports `folder_exclude_patterns` and `file_exclude_patterns` from your sublime project settings. In the event you wish to process those files, you can disable that functionality using the following.
-
-```javascript
-"disable_project_import": true
 ```
 
 ## Keyboard Shortcuts And Other Actions
