@@ -27,7 +27,7 @@ def do_when(conditional, callback, *args, **kwargs):
 class Settings():
 	def __init__(self, window):
 		self.user = sublime.load_settings('TodoReview.sublime-settings')
-		self.proj = window.project_data().get('settings', {'todoreview': None}).get('todoreview', None);
+		self.proj = window.project_data().get('settings', {'todoreview': {}}).get('todoreview', {});
 
 	def get(self, item, default):
 		return self.proj.get(item, self.user.get(item, default));

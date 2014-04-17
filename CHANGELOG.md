@@ -1,3 +1,6 @@
+# 2.1.4 - 04/17/14
+- Fix: Error due to project settings (#41)
+
 # 2.1.3 - 04/17/14
 - Add: Documentation for regex101 (#40)
 - Add: Documentation for `include_paths` and project settings

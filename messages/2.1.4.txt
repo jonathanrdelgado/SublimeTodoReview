@@ -1,0 +1,9 @@
+TodoReview 2.1.4
+--------------------
+
+Documentation is at https://github.com/jonathandelgado/SublimeTodoReview
+As always, please report any issues.
+
+
+# 2.1.4 - 04/17/14
+- Fix: Error due to project settings (#41)
