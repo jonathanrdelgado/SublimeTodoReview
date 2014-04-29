@@ -271,8 +271,8 @@ class TodoReviewCommand(sublime_plugin.TextCommand):
 		self.window.run_command('render_result_run', {'formatted_results': rendered, 'file_counter': str(counter)})
 
 class NavigateResults(sublime_plugin.TextCommand):
-	DIRECTION = {'forward': 1, 'backward': -1}
-	STARTING_POINT = {'forward': -1, 'backward': 0}
+	DIRECTION = {'forward': 1, 'backward': -1, 'forward_skip' : settings.get('navigation_forward_skip', 10), 'backward_skip' : settings.get('navigation_backward_skip', 10) * -1}
+	STARTING_POINT = {'forward': -1, 'backward': 0, 'forward_skip': -1, 'backward_skip': 0}
 
 	def __init__(self, view):
 		super(NavigateResults, self).__init__(view)
@@ -281,6 +281,8 @@ class NavigateResults(sublime_plugin.TextCommand):
 		view = self.view
 		settings = view.settings()
 		results = self.view.get_regions('results')
+		DIRECTION = {'forward': 1, 'backward': -1, 'forward_skip' : settings.get('navigation_forward_skip', 10), 'backward_skip' : settings.get('navigation_backward_skip', 10) * -1}
+
 		if not results:
 			sublime.status_message('No results to navigate')
 			return

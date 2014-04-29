@@ -23,7 +23,7 @@ Simply open your Sublime Text 3 Command Pallet and find the `TodoReview: Project
 ## Navigating results
 Once the list is generated, as a swift coder, you must naturally want to navigate it with your keyboard, right? Well you are in luck!
 
-By pressing the `up` or `down` keys, you are able to swiftly navigate the results. If you are a VIM user, you can also use `j` and `k` respectably. Once you have navigated to the result you want, simply press `enter` to open the result in a new tab, while going to the corresponding line.
+By pressing the `up` or `down` keys, you are able to swiftly navigate the results. If you are a VIM user, you can also use `j` and `k` respectably. You can also use `shift+up`, `pageup`, or `shift+down`, `pagedown` to skip 10 lines at a time. Once you have navigated to the result you want, simply press `enter` to open the result in a new tab, while going to the corresponding line.
 
 In the event you would like to clear your selection, you may do so by pressing `c`.
 
@@ -139,6 +139,14 @@ If you have OCD and like things to be nicely aligned, I've included a spaces opt
 
 ```javascript
 "render_spaces": 10
+```
+
+## Custom Skip Lines
+If you would like to skip more (or less) than 10 lines at a time when using `shift + up`, `pageup`, `shift + down`, or `pagedown`, you can add the following lines to your config. Make sure that you use positive numbers for both. This defaults to `10`.
+
+```javascript
+"navigation_forward_skip": 10,
+"navigation_backward_skip": 10
 ```
 
 ## Keyboard Shortcuts And Other Actions
