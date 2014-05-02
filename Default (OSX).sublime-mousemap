@@ -1,0 +1,6 @@
+[
+	{
+		"button": "button1", "count": 2,
+		"command": "mouse_goto_comment"
+	}
+]

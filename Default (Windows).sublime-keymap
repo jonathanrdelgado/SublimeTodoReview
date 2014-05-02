@@ -10,12 +10,12 @@
     },
 
     {
-        "keys": ["shift+down"], "command": "navigate_results",
+        "keys": ["j"], "command": "navigate_results",
         "context": [
             {"key": "setting.command_mode", "operand": true},
             {"key": "setting.todo_results"}
         ],
-        "args": {"direction": "forward_skip"}
+        "args": {"direction": "forward"}
     },
 
     {
@@ -28,15 +28,6 @@
     },
 
     {
-        "keys": ["j"], "command": "navigate_results",
-        "context": [
-            {"key": "setting.command_mode", "operand": true},
-            {"key": "setting.todo_results"}
-        ],
-        "args": {"direction": "forward"}
-    },
-
-    {
         "keys": ["up"], "command": "navigate_results",
         "context": [
             {"key": "setting.command_mode", "operand": true},
@@ -46,12 +37,12 @@
     },
 
     {
-        "keys": ["shift+up"], "command": "navigate_results",
+        "keys": ["k"], "command": "navigate_results",
         "context": [
             {"key": "setting.command_mode", "operand": true},
             {"key": "setting.todo_results"}
         ],
-        "args": {"direction": "backward_skip"}
+        "args": {"direction": "backward"}
     },
 
     {
@@ -61,15 +52,6 @@
             {"key": "setting.todo_results"}
         ],
         "args": {"direction": "backward_skip"}
-    },
-
-    {
-        "keys": ["k"], "command": "navigate_results",
-        "context": [
-            {"key": "setting.command_mode", "operand": true},
-            {"key": "setting.todo_results"}
-        ],
-        "args": {"direction": "backward"}
     },
 
     {

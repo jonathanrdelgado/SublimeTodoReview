@@ -1,3 +1,12 @@
+# 2.1.5 - 05/02/14
+- Upd: Changed proj settings to user settings (#45)
+- Upd: Better default settings (#48)
+- Upd: Documentation for page up/down
+- Del: Shift up/down skipping, selection issues
+- Upd: Refactored navigation
+- Add: Mouse navigation (#47)
+- Add: Navigation Skipping. Thanks @phoopee3 (#46)
+
 # 2.1.4 - 04/17/14
 - Fix: Error due to project settings (#41)
 

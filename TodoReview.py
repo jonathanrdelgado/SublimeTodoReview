@@ -25,12 +25,12 @@ def do_when(conditional, callback, *args, **kwargs):
 	sublime.set_timeout(functools.partial(do_when, conditional, callback, *args, **kwargs), 50)
 
 class Settings():
-	def __init__(self, window):
+	def __init__(self, view):
 		self.user = sublime.load_settings('TodoReview.sublime-settings')
-		self.proj = window.project_data().get('settings', {'todoreview': {}}).get('todoreview', {});
+		self.view = view.settings().get('todoreview', {})
 
 	def get(self, item, default):
-		return self.proj.get(item, self.user.get(item, default));
+		return self.view.get(item, self.user.get(item, default))
 
 class ThreadProgress(object):
 	def __init__(self, thread, message, success_message, file_counter):
@@ -208,9 +208,7 @@ class WorkerThread(threading.Thread):
 					else:
 						filepath = path.basename(m['filepath'])
 
-					extraSpaces = 3 - len(str(idx));
-
-					spaces = ' '*((settings.get('render_spaces', 1) + extraSpaces) - len(filepath + ':' + str(m['linenum'])))
+					spaces = ' '*(settings.get('render_spaces', 1) - len(str(idx) + filepath + ':' + str(m['linenum'])))
 					line = u'{idx}. {filepath}:{linenum}{spaces}{msg}'.format(idx=idx, filepath=filepath, linenum=m['linenum'], spaces=spaces, msg=msg)
 					yield ('result', line, m)
 
@@ -240,12 +238,12 @@ class TodoReviewCommand(sublime_plugin.TextCommand):
 		global settings
 
 		filepaths = []
+		settings = Settings(self.view)
 		self.window = self.view.window()
-		settings = Settings(self.window);
 
 		if not paths:
 			if settings.get('include_paths', False):
-				paths = settings.get('include_paths', False);
+				paths = settings.get('include_paths', False)
 
 		if open_files:
 			filepaths = [view.file_name() for view in self.window.views() if view.file_name()]
@@ -271,35 +269,49 @@ class TodoReviewCommand(sublime_plugin.TextCommand):
 		self.window.run_command('render_result_run', {'formatted_results': rendered, 'file_counter': str(counter)})
 
 class NavigateResults(sublime_plugin.TextCommand):
-	DIRECTION = {'forward': 1, 'backward': -1, 'forward_skip' : settings.get('navigation_forward_skip', 10), 'backward_skip' : settings.get('navigation_backward_skip', 10) * -1}
-	STARTING_POINT = {'forward': -1, 'backward': 0, 'forward_skip': -1, 'backward_skip': 0}
-
 	def __init__(self, view):
 		super(NavigateResults, self).__init__(view)
 
 	def run(self, edit, direction):
-		view = self.view
-		settings = view.settings()
+		view_settings = self.view.settings()
 		results = self.view.get_regions('results')
-		DIRECTION = {'forward': 1, 'backward': -1, 'forward_skip' : settings.get('navigation_forward_skip', 10), 'backward_skip' : settings.get('navigation_backward_skip', 10) * -1}
+
+		start_arr = {
+			'forward': -1,
+			'backward': 0,
+			'forward_skip': -1,
+			'backward_skip': 0
+		}
+
+		dir_arr = {
+			'forward': 1,
+			'backward': -1,
+			'forward_skip': settings.get('navigation_forward_skip', 10),
+			'backward_skip': settings.get('navigation_backward_skip', 10) * -1
+		}
 
 		if not results:
 			sublime.status_message('No results to navigate')
 			return
 
-		selection = int(settings.get('selected_result', self.STARTING_POINT[direction]))
-		selection = selection + self.DIRECTION[direction]
+		selection = int(view_settings.get('selected_result', start_arr[direction]))
+		selection = selection + dir_arr[direction]
+
 		try:
 			target = results[selection]
 		except IndexError:
-			target = results[0]
-			selection = 0
+			if selection < 0:
+				target = results[0]
+				selection = 0
+			else:
+				target = results[len(results) - 1]
+				selection = len(results) - 1
 
-		settings.set('selected_result', selection)
+		view_settings.set('selected_result', selection)
 		target = target.cover(target)
-		view.add_regions('selection', [target], 'selected', 'dot')
+		self.view.add_regions('selection', [target], 'selected', 'dot')
 		target.b = target.a + 5
-		view.show(target)
+		self.view.show(target)
 
 class ClearSelection(sublime_plugin.TextCommand):
 	def run(self, edit):
@@ -307,13 +319,31 @@ class ClearSelection(sublime_plugin.TextCommand):
 		self.view.settings().erase('selected_result')
 
 class GotoComment(sublime_plugin.TextCommand):
-
 	def __init__(self, *args):
 		super(GotoComment, self).__init__(*args)
 
 	def run(self, edit):
 		selection = int(self.view.settings().get('selected_result', -1))
 		selected_region = self.view.get_regions('results')[selection]
+
 		data = self.view.settings().get('result_regions')['{0},{1}'.format(selected_region.a, selected_region.b)]
 		new_view = self.view.window().open_file(data['filepath'])
 		do_when(lambda: not new_view.is_loading(), lambda:new_view.run_command('goto_line', {'line': data['linenum']}))
+
+class MouseGotoComment(sublime_plugin.TextCommand):
+    def __init__(self, *args):
+        super(MouseGotoComment, self).__init__(*args)
+
+    def run(self, edit):
+        if not self.view.settings().get('result_regions'):
+            return
+
+        result = self.view.line(self.view.sel()[0].end())
+
+        target = result.cover(result)
+        self.view.add_regions('selection', [target], 'selected', 'dot')
+        self.view.show(target)
+
+        data = self.view.settings().get('result_regions')['{0},{1}'.format(result.a, result.b)]
+        new_view = self.view.window().open_file(data['filepath'])
+        do_when(lambda: not new_view.is_loading(), lambda: new_view.run_command("goto_line", {"line": data['linenum']}))
