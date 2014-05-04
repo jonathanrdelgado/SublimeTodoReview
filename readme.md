@@ -23,9 +23,9 @@ Simply open your Sublime Text 3 Command Pallet and find the `TodoReview: Project
 ## Navigating results
 Once the list is generated, as a swift coder, you must naturally want to navigate it with your keyboard, right? Well you are in luck!
 
-By pressing the `up` or `down` keys, you are able to swiftly navigate the results. If you are a VIM user, you can also use `j` and `k` respectably. You can also use `page up` or `page down` to skip 10 lines at a time. Once you have navigated to the result you want, simply press `enter` to open the result in a new tab, while going to the corresponding line.
+By pressing the `up` or `down` keys, you are able to swiftly navigate the results. If you are a VIM user, you can also use `j` and `k` respectably. You can also use `page up` or `page down` to skip 10 lines at a time. Once you have navigated to the result you want, simply press `enter` to open the result in a new tab, while going to the corresponding line. In the event you would like to clear your selection, you may do so by pressing `c`.
 
-In the event you would like to clear your selection, you may do so by pressing `c`.
+You can also use your mouse, just press `alt` and double click on the result you would like to examine.
 
 ## Priorities
 New in 2.1.0, results are now fully indexed and sorted. You can now add something like `(0)` to anywhere in your todo's to assign a priority of `0`. This will work with any number up to 99. Todo's are then sorted with the lowest number first; all matches that don't have priorities will be assigned a priority of 100. Here is some example output:

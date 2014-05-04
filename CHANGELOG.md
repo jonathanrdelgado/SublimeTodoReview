@@ -1,3 +1,7 @@
+# 2.1.6 - 05/04/14
+- Fix: Documentation on clicking
+- Fix: Double click in incorrect context (#49)
+
 # 2.1.5 - 05/02/14
 - Upd: Changed proj settings to user settings (#45)
 - Upd: Better default settings (#48)
@@ -23,7 +27,7 @@
 - Add: Ability to import project exclusions for files and folders (#33, #25)
 - Add: Setting to control project importing
 - Add: Documentation on project setting importing
-- Upd: Added claification on other actions readme
+- Upd: Added clarification on other actions readme
 - Upd: Fixed readme markdown headers
 
 # 2.1.1 - 04/01/14

@@ -1,0 +1,14 @@
+TodoReview 2.1.6
+--------------------
+
+Documentation is at https://github.com/jonathandelgado/SublimeTodoReview
+As always, please report any issues.
+
+Fixed the double click bind not respecting the TodoReview context - Sublime apparently doesn't understand context when it comes to mouse bindings, so I changed the bind to `double click when pressing alt`. I looked at the default keymap and it shouldn't conflict, but this might be removed if more issues arise.
+
+Thank you everyone for the reports.
+
+
+# 2.1.6 - 05/04/14
+- Fix: Documentation on clicking
+- Fix: Double click in incorrect context (#49)
