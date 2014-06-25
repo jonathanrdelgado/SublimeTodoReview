@@ -1,3 +1,6 @@
+# Master
+- Upd: Dependencies
+
 # 2.1.6 - 05/04/14
 - Fix: Documentation on clicking
 - Fix: Double click in incorrect context (#49)
