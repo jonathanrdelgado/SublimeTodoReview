@@ -2,66 +2,76 @@
 <!DOCTYPE plist PUBLIC "-//Apple Computer//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
-    <key>name</key>
-    <string>TodoReview</string>
+	<key>name</key>
+	<string>TodoReview</string>
 
-    <key>patterns</key>
-    <array>
-        <dict>
-            <key>comment</key>
-            <string>Titles</string>
+	<key>patterns</key>
+	<array>
+		<dict>
+			<key>comment</key>
+			<string>Header</string>
 
-            <key>match</key>
-            <string>^.*##.*$</string>
+			<key>match</key>
+			<string>^\/\/.*$</string>
 
-            <key>name</key>
-            <string>string</string>
-        </dict>
-        <dict>
-            <key>comment</key>
-            <string>Line Num</string>
+			<key>name</key>
+			<string>comment</string>
+		</dict>
+		<dict>
+			<key>comment</key>
+			<string>Titles</string>
 
-            <key>match</key>
-            <string>:[0-9]+\s</string>
+			<key>match</key>
+			<string>^##.*$</string>
 
-            <key>name</key>
-            <string>entity.name.function</string>
-        </dict>
-        <dict>
-            <key>comment</key>
-            <string>Priority</string>
+			<key>name</key>
+			<string>string</string>
+		</dict>
+		<dict>
+			<key>comment</key>
+			<string>Line Num</string>
 
-            <key>match</key>
-            <string>\(([0-9]{1,2})\)</string>
+			<key>match</key>
+			<string>:[0-9]+\s</string>
 
-            <key>name</key>
-            <string>variable</string>
-        </dict>
-        <dict>
-            <key>comment</key>
-            <string>Brackets</string>
+			<key>name</key>
+			<string>entity.name.function</string>
+		</dict>
+		<dict>
+			<key>comment</key>
+			<string>Priority</string>
 
-            <key>match</key>
-            <string>\[(.*?)\]</string>
+			<key>match</key>
+			<string>\(([0-9]{1,2})\)</string>
 
-            <key>name</key>
-            <string>entity.name.class</string>
-        </dict>
-        <dict>
-            <key>comment</key>
-            <string>@tags</string>
+			<key>name</key>
+			<string>variable</string>
+		</dict>
+		<dict>
+			<key>comment</key>
+			<string>Brackets</string>
 
-            <key>match</key>
-            <string>\@\S+</string>
+			<key>match</key>
+			<string>\[(.*?)\]</string>
 
-            <key>name</key>
-            <string>keyword</string>
-        </dict>
-    </array>
+			<key>name</key>
+			<string>entity.name.class</string>
+		</dict>
+		<dict>
+			<key>comment</key>
+			<string>@tags</string>
 
-    <key>scopeName</key>
-    <string>text.todo-list</string>
-    <key>uuid</key>
-    <string>c67743c1-8072-45e2-8229-271c169b60d0</string>
+			<key>match</key>
+			<string>\@\S+</string>
+
+			<key>name</key>
+			<string>keyword</string>
+		</dict>
+	</array>
+
+	<key>scopeName</key>
+	<string>text.todo-list</string>
+	<key>uuid</key>
+	<string>c67743c1-8072-45e2-8229-271c169b60d0</string>
 </dict>
 </plist>

@@ -1,73 +1,75 @@
 [
 
 	{
-		"keys": ["down"], "command": "navigate_results",
+		"keys": ["down"], "command": "todo_review_results",
 		"context": [
 			{"key": "setting.command_mode", "operand": true},
 			{"key": "setting.todo_results"}
 		],
-		"args": {"direction": "forward"}
+		"args": {"direction": "down"}
 	},
 
 	{
-		"keys": ["j"], "command": "navigate_results",
+		"keys": ["j"], "command": "todo_review_results",
 		"context": [
 			{"key": "setting.command_mode", "operand": true},
 			{"key": "setting.todo_results"}
 		],
-		"args": {"direction": "forward"}
+		"args": {"direction": "down"}
 	},
 
 	{
-		"keys": ["pagedown"], "command": "navigate_results",
+		"keys": ["pagedown"], "command": "todo_review_results",
 		"context": [
 			{"key": "setting.command_mode", "operand": true},
 			{"key": "setting.todo_results"}
 		],
-		"args": {"direction": "forward_skip"}
+		"args": {"direction": "down_skip"}
 	},
 
 	{
-		"keys": ["up"], "command": "navigate_results",
+		"keys": ["up"], "command": "todo_review_results",
 		"context": [
 			{"key": "setting.command_mode", "operand": true},
 			{"key": "setting.todo_results"}
 		],
-		"args": {"direction": "backward"}
+		"args": {"direction": "up"}
 	},
 
 	{
-		"keys": ["k"], "command": "navigate_results",
+		"keys": ["k"], "command": "todo_review_results",
 		"context": [
 			{"key": "setting.command_mode", "operand": true},
 			{"key": "setting.todo_results"}
 		],
-		"args": {"direction": "backward"}
+		"args": {"direction": "up"}
 	},
 
 	{
-		"keys": ["pageup"], "command": "navigate_results",
+		"keys": ["pageup"], "command": "todo_review_results",
 		"context": [
 			{"key": "setting.command_mode", "operand": true},
 			{"key": "setting.todo_results"}
 		],
-		"args": {"direction": "backward_skip"}
+		"args": {"direction": "up_skip"}
 	},
 
 	{
-		"keys": ["c"], "command": "clear_selection",
+		"keys": ["enter"], "command": "todo_review_results",
 		"context": [
 			{"key": "setting.command_mode", "operand": true},
 			{"key": "setting.todo_results"}
-		]
+		],
+		"args": {"open": true}
 	},
 
 	{
-		"keys": ["enter"], "command": "goto_comment",
+		"keys": ["r"], "command": "todo_review_results",
 		"context": [
 			{"key": "setting.command_mode", "operand": true},
 			{"key": "setting.todo_results"}
-		]
+		],
+		"args": {"refresh": true}
 	}
 
 ]

@@ -1,349 +1,398 @@
 '''
 SublimeTodoReview
-A SublimeText 3 plugin for reviewing todo (any other) comments within your code.
+A SublimeText 3 plugin for reviewing todo (and other) comments within your code.
 
 @author Jonathan Delgado (Initial Repo by @robcowie and ST3 update by @dnatag)
 '''
 
-from collections import namedtuple
-from datetime import datetime
-from itertools import groupby
-from os import path, walk
+import datetime
+import fnmatch
+import itertools
+import os
+import re
+import sublime
+import sublime
 import sublime_plugin
 import threading
-import sublime
-import functools
-import fnmatch
-import re
-
-Message = namedtuple('Message', 'type, msg')
-
-
-def do_when(conditional, callback, *args, **kwargs):
-	if conditional():
-		return callback(*args, **kwargs)
-	sublime.set_timeout(functools.partial(do_when, conditional, callback, *args, **kwargs), 50)
+import timeit
 
 class Settings():
+
 	def __init__(self, view):
 		self.user = sublime.load_settings('TodoReview.sublime-settings')
-		self.view = view.settings().get('todoreview', {})
+		self.proj = view.settings().get('todoreview', {})
 
-	def get(self, item, default):
-		return self.view.get(item, self.user.get(item, default))
 
-class ThreadProgress(object):
-	def __init__(self, thread, message, success_message, file_counter):
-		self.thread = thread
-		self.message = message
-		self.success_message = success_message
-		self.file_counter = file_counter
-		self.addend = 1
-		self.size = 8
-		sublime.set_timeout(lambda: self.run(0), 100)
+	def get(self, key, default):
+		return self.proj.get(key, self.user.get(key, default))
 
-	def run(self, i):
-		if not self.thread.is_alive():
-			if hasattr(self.thread, 'result') and not self.thread.result:
-				sublime.status_message('')
-				return
-			sublime.status_message(self.success_message)
-			return
-		before = i % self.size
-		after = (self.size - 1) - before
-		sublime.status_message('%s [%s=%s] (%s files scanned)' % (self.message, ' ' * before, ' ' * after, self.file_counter))
-		if not after:
-			self.addend = -1
-		if not before:
-			self.addend = 1
-		i += self.addend
-		sublime.set_timeout(lambda: self.run(i), 100)
 
-class TodoExtractor(object):
-	def __init__(self, dirpaths, filepaths, file_counter):
+class Engine():
+
+	def __init__(self, dirpaths, filepaths, view):
+		self.view = view
 		self.dirpaths = dirpaths
 		self.filepaths = filepaths
-		self.patterns = settings.get('patterns', {})
-		self.file_counter = file_counter
-		self.ignored_files = [fnmatch.translate(patt) for patt in settings.get('exclude_files', [])]
-		self.ignored_folders = [fnmatch.translate(patt) for patt in settings.get('exclude_folders', [])]
 
-	def iter_files(self):
-		seen_paths_ = []
-		exclude_folders = [re.compile(patt) for patt in self.ignored_folders]
+		if settings.get('case_sensitive', False):
+			case = 0
+		else:
+			case = re.IGNORECASE
 
-		for filepath in self.filepaths:
-			pth = path.realpath(path.expanduser(path.abspath(filepath)))
-			if pth not in seen_paths_:
-				seen_paths_.append(pth)
-				yield pth
+		patt_patterns = settings.get('patterns', {})
+		patt_files = settings.get('exclude_files', [])
+		patt_folders = settings.get('exclude_folders', [])
+
+		match_patterns = '|'.join(patt_patterns.values())
+		match_files = [fnmatch.translate(p) for p in patt_files]
+		match_folders = [fnmatch.translate(p) for p in patt_folders]
+
+		self.patterns = re.compile(match_patterns, case)
+		self.priority = re.compile(r'\(([0-9]{1,2})\)')
+		self.exclude_files = [re.compile(p) for p in match_files]
+		self.exclude_folders = [re.compile(p) for p in match_folders]
+
+		self.open = self.view.window().views()
+		self.open_files = [v.file_name() for v in self.open if v.file_name()]
+
+
+	def files(self):
+		seen_paths = []
 
 		for dirpath in self.dirpaths:
-			dirpath = path.abspath(dirpath)
-			for dirpath, dirnames, filenames in walk(dirpath):
+			for dirp, dirnames, filepaths in os.walk(self.resolve(dirpath)):
 
-				if any(patt.search(dirpath) for patt in exclude_folders):
+				if any(p.search(dirp) for p in self.exclude_folders):
 					continue
 
-				for filepath in filenames:
-					pth = path.join(dirpath, filepath)
-					pth = path.realpath(path.expanduser(path.abspath(pth)))
-					if pth not in seen_paths_:
-						seen_paths_.append(pth)
-						yield pth
+				for filepath in filepaths:
+					self.filepaths.append(os.path.join(dirp, filepath))
 
-	def filter_files(self, files):
-		exclude_files = [re.compile(patt) for patt in self.ignored_files]
 
-		for filepath in files:
-			if any(patt.search(filepath) for patt in exclude_files):
+		for filepath in self.filepaths:
+			p = self.resolve(filepath)
+			if p in seen_paths:
 				continue
-			yield filepath
 
-	def search_targets(self):
-		return self.filter_files(self.iter_files())
+			if any(p.search(filepath) for p in self.exclude_folders):
+				continue
 
-	def extract(self):
-		message_patterns = '|'.join(self.patterns.values())
-		case_sensitivity = 0 if settings.get('case_sensitive', False) else re.IGNORECASE
-		patt = re.compile(message_patterns, case_sensitivity)
-		patt_priority = re.compile(r'\(([0-9]{1,2})\)')
-		for filepath in self.search_targets():
+			if any(p.search(filepath) for p in self.exclude_files):
+				continue
+
+			seen_paths.append(p)
+			yield p
+
+
+	def extract(self, files):
+		for p in files:
 			try:
-				f = open(filepath, 'r', encoding='utf-8')
-				for linenum, line in enumerate(f):
-					for mo in patt.finditer(line):
+				if p in self.open_files:
+					for view in self.open:
+						if view.file_name() == p:
+							f = []
+							lines = view.lines(sublime.Region(0, view.size()))
+							for line in lines:
+								f.append(view.substr(line))
+							break
+				else:
+					f = open(p, 'r')
 
-						matches = [Message(msg_type, msg) for msg_type, msg in mo.groupdict().items() if msg]
-						for matchi in matches:
-							priority = patt_priority.search(matchi.msg)
+				for num, line in enumerate(f, 1):
+					for result in self.patterns.finditer(line):
+						for patt, note in result.groupdict().items():
 
-							if priority:
-								priority = int(priority.group(0).replace('(', '').replace(')', ''))
+							if not note:
+								continue
+
+							priority_match = self.priority.search(note)
+
+							if(priority_match):
+								priority = int(priority_match.group(1))
 							else:
 								priority = 100
 
 							yield {
-								'filepath': filepath,
-								'linenum': linenum + 1,
-								'match': matchi,
+								'file': p,
+								'patt': patt,
+								'note': note,
+								'line': num,
 								'priority': priority
 							}
-			except (IOError, UnicodeDecodeError):
+
+			except(IOError, UnicodeDecodeError):
 				f = None
+
 			finally:
-				self.file_counter.increment()
-				if f is not None:
+				thread.increment()
+				if f is not None and type(f) is not list:
 					f.close()
 
-class RenderResultRunCommand(sublime_plugin.TextCommand):
-	def run(self, edit, formatted_results, file_counter):
-		active_window = sublime.active_window()
-		existing_results = [v for v in active_window.views() if v.name() == 'TodoReview' and v.is_scratch()]
-		if existing_results:
-			result_view = existing_results[0]
-		else:
-			result_view = active_window.new_file()
-			result_view.set_name('TodoReview')
-			result_view.set_scratch(True)
-			result_view.settings().set('todo_results', True)
 
-		hr = u'+ {0} +'.format('-' * 56)
-		header = u'{hr}\n| TodoReview @ {0:<43} |\n| {1:<56} |\n{hr}\n'.format(datetime.now().strftime('%A %m/%d/%y at %I:%M%p'), u'{0} files scanned'.format(file_counter), hr=hr)
-
-		result_view.erase(edit, sublime.Region(0, result_view.size()))
-		result_view.insert(edit, result_view.size(), header)
-
-		regions_data = [x[:] for x in [[]] * 2]
+	def process(self):
+		return self.extract(self.files())
 
 
-		for linetype, line, data in formatted_results:
-			insert_point = result_view.size()
-			result_view.insert(edit, insert_point, line)
-			if linetype == 'result':
-				rgn = sublime.Region(insert_point, result_view.size())
-				regions_data[0].append(rgn)
-				regions_data[1].append(data)
-			result_view.insert(edit, result_view.size(), u'\n')
+	def resolve(self, directory):
+		return os.path.realpath(os.path.expanduser(os.path.abspath(directory)))
 
-		result_view.add_regions('results', regions_data[0], '')
 
-		d_ = dict(('{0},{1}'.format(k.a, k.b), v) for k, v in zip(regions_data[0], regions_data[1]))
-		result_view.settings().set('result_regions', d_)
+class Thread(threading.Thread):
 
-		result_view.assign_syntax('Packages/TodoReview/TodoReview.hidden-tmLanguage')
-		result_view.settings().set('line_padding_bottom', 2)
-		result_view.settings().set('line_padding_top', 2)
-		result_view.settings().set('word_wrap', False)
-		result_view.settings().set('command_mode', True)
-		active_window.focus_view(result_view)
-
-class WorkerThread(threading.Thread):
-
-	def __init__(self, extractor, callback, file_counter):
-		self.extractor = extractor
+	def __init__(self, engine, callback):
+		self.i = 0;
+		self.engine = engine
 		self.callback = callback
-		self.file_counter = file_counter
+		self.lock = threading.RLock()
 		threading.Thread.__init__(self)
 
+
 	def run(self):
+		self.start = timeit.default_timer()
+		results = list(self.engine.process())
+		self.callback(results, self.finish(), self.i)
 
-		todos = self.extractor.extract()
-		formatted = list(self.format(todos))
-		self.callback(formatted, self.file_counter)
 
-	def format(self, messages):
-		messages = sorted(messages, key=lambda m: (m['priority'], m['match'].type))
+	def finish(self):
+		return round(timeit.default_timer() - self.start, 2)
 
-		for message_type, matches in groupby(messages, key=lambda m: m['match'].type):
-			matches = list(matches)
-			if matches:
-				yield ('header', u'\n## {0} ({1})'.format(message_type.upper(), len(matches)), {})
-				for idx, m in enumerate(matches, 1):
-					msg = m['match'].msg
-
-					if settings.get('render_include_folder', False):
-						filepath = path.dirname(m['filepath']).replace('\\', '/').split('/')
-						filepath = filepath[len(filepath) - 1]  + '/' + path.basename(m['filepath'])
-					else:
-						filepath = path.basename(m['filepath'])
-
-					spaces = ' '*(settings.get('render_spaces', 1) - len(str(idx) + filepath + ':' + str(m['linenum'])))
-					line = u'{idx}. {filepath}:{linenum}{spaces}{msg}'.format(idx=idx, filepath=filepath, linenum=m['linenum'], spaces=spaces, msg=msg)
-					yield ('result', line, m)
-
-class FileScanCounter(object):
-
-	def __init__(self):
-		self.ct = 0
-		self.lock = threading.RLock()
-
-	def __call__(self, filepath):
-		self.increment()
-
-	def __str__(self):
-		with self.lock:
-			return '%d' % self.ct
 
 	def increment(self):
 		with self.lock:
-			self.ct += 1
+			self.i += 1
+			sublime.status_message("TodoReview: {0} files scanned".format(self.i))
 
-	def reset(self):
-		with self.lock:
-			self.ct = 0
 
 class TodoReviewCommand(sublime_plugin.TextCommand):
-	def run(self, edit, paths=False, open_files=False, open_files_only=False):
-		global settings
+
+	def run(self, edit, **args):
+		global settings, thread
 
 		filepaths = []
+		self.args = args
+		window = self.view.window()
 		settings = Settings(self.view)
-		self.window = self.view.window()
+		paths = args.get('paths', None)
 
-		if not paths:
-			if settings.get('include_paths', False):
-				paths = settings.get('include_paths', False)
+		if not paths and settings.get('include_paths', False):
+			paths = settings.get('include_paths')
 
-		if open_files:
-			filepaths = [view.file_name() for view in self.window.views() if view.file_name()]
+		if args.get('open_files', False):
+			filepaths = [v.file_name() for v in window.views() if v.file_name()]
 
-		if not open_files_only:
+		if not args.get('open_files_only', False):
 			if not paths:
-				paths = self.window.folders()
+				paths = window.folders()
 			else:
 				for p in paths:
-					if path.isfile(p):
+					if os.path.isfile(p):
 						filepaths.append(p)
 		else:
 			paths = []
 
-		file_counter = FileScanCounter()
-		extractor = TodoExtractor(paths, filepaths, file_counter)
+		engine = Engine(paths, filepaths, self.view)
+		thread = Thread(engine, self.render)
+		thread.start()
 
-		worker_thread = WorkerThread(extractor, self.render_formatted, file_counter)
-		worker_thread.start()
-		ThreadProgress(worker_thread, 'Finding TODOs', '', file_counter)
 
-	def render_formatted(self, rendered, counter):
-		self.window.run_command('render_result_run', {'formatted_results': rendered, 'file_counter': str(counter)})
+	def render(self, results, time, count):
+		self.view.run_command('todo_review_render', {
+			"results": results,
+			"time": time,
+			"count": count,
+			"args": self.args
+		})
 
-class NavigateResults(sublime_plugin.TextCommand):
-	def __init__(self, view):
-		super(NavigateResults, self).__init__(view)
 
-	def run(self, edit, direction):
-		view_settings = self.view.settings()
-		results = self.view.get_regions('results')
+class TodoReviewRender(sublime_plugin.TextCommand):
 
-		start_arr = {
-			'forward': -1,
-			'backward': 0,
-			'forward_skip': -1,
-			'backward_skip': 0
-		}
+	def run(self, edit, results, time, count, args):
+		self.args = args
+		self.edit = edit
+		self.time = time
+		self.count = count
+		self.results = results
+		self.sorted = self.sort()
+		self.rview = self.get_view()
 
-		dir_arr = {
-			'forward': 1,
-			'backward': -1,
-			'forward_skip': settings.get('navigation_forward_skip', 10),
-			'backward_skip': settings.get('navigation_backward_skip', 10) * -1
-		}
+		self.draw_header()
+		self.draw_results()
 
-		if not results:
-			sublime.status_message('No results to navigate')
+		self.window.focus_view(self.rview)
+		self.rview.settings().set('review_args', self.args)
+
+
+	def sort(self):
+		self.largest = 0
+
+		for item in self.results:
+			self.largest = max(len(self.draw_file(item)), self.largest)
+
+		self.largest = min(self.largest, settings.get('render_maxspaces', 50)) + 6
+
+		w = settings.get('patterns_weight', {})
+		key = lambda m: (str(w.get(m['patt'].upper(), m['patt'])), m['priority'])
+
+		results = sorted(self.results, key=key)
+		return itertools.groupby(results, key=lambda m: m['patt'])
+
+
+	def get_view(self):
+		self.window = sublime.active_window()
+
+		for view in self.window.views():
+			if view.settings().get('todo_results', False):
+				view.erase(self.edit, sublime.Region(0, view.size()))
+				return view
+
+		view = self.window.new_file()
+		view.set_name('TodoReview')
+		view.set_scratch(True)
+		view.settings().set('todo_results', True)
+
+		view.assign_syntax('Packages/TodoReview/TodoReview.hidden-tmLanguage')
+		view.settings().set('line_padding_bottom', 2)
+		view.settings().set('line_padding_top', 2)
+		view.settings().set('word_wrap', False)
+		view.settings().set('command_mode', True)
+		return view
+
+
+	def draw_header(self):
+
+		forms = settings.get('render_header_format', '%d - %c files in %t secs')
+		datestr = settings.get('render_header_date', '%A %m/%d/%y at %I:%M%p')
+
+		if len(forms) == 0:
 			return
 
-		selection = int(view_settings.get('selected_result', start_arr[direction]))
-		selection = selection + dir_arr[direction]
+		date = datetime.datetime.now().strftime(datestr)
 
-		try:
-			target = results[selection]
-		except IndexError:
-			if selection < 0:
-				target = results[0]
-				selection = 0
-			else:
+		res = '// '
+		res += forms \
+			.replace('%d', date) \
+			.replace('%t', str(self.time)) \
+			.replace('%c', str(self.count))
+		res += '\n'
+
+		self.rview.insert(self.edit, self.rview.size(), res)
+
+
+	def draw_results(self):
+		data = [x[:] for x in [[]] * 2]
+
+		for patt, items in self.sorted:
+			items = list(items)
+
+			res = '\n## %t (%n)\n' \
+				.replace('%t', patt.upper()) \
+				.replace('%n', str(len(items)))
+
+			self.rview.insert(self.edit, self.rview.size(), res)
+
+			for idx, item in enumerate(items, 1):
+
+				line = '%i. %f' \
+					.replace('%i', str(idx)) \
+					.replace('%f', self.draw_file(item))
+
+				res = '%f%s%n\n' \
+					.replace('%f', line) \
+					.replace('%s', ' '*max((self.largest - len(line)), 1)) \
+					.replace('%n', item['note'])
+
+				start = self.rview.size()
+				self.rview.insert(self.edit, start, res)
+				region = sublime.Region(start, self.rview.size())
+
+				data[0].append(region)
+				data[1].append(item)
+
+		self.rview.add_regions('results', data[0], '')
+
+		d = dict(('{0},{1}'.format(k.a, k.b), v) for k, v in zip(data[0], data[1]))
+		self.rview.settings().set('review_results', d)
+
+
+	def draw_file(self, item):
+		if settings.get('render_include_folder', False):
+			f = os.path.dirname(item['file']).replace('\\', '/').split('/')
+			f = f[len(f) - 1]  + '/' + os.path.basename(item['file'])
+		else:
+			f = os.path.basename(item['file'])
+
+		return '%f:%l' \
+			.replace('%f', f) \
+			.replace('%l', str(item['line']))
+
+
+class TodoReviewResults(sublime_plugin.TextCommand):
+
+	def run(self, edit, **args):
+		self.settings = self.view.settings()
+
+		if not self.settings.get('review_results'):
+			return
+
+		if args.get('open'):
+			window = self.view.window()
+			index = int(self.settings.get('selected_result', -1))
+			result = self.view.get_regions('results')[index]
+
+			coords = '{0},{1}'.format(result.a, result.b)
+			i = self.settings.get('review_results')[coords]
+			p = "%f:%l".replace('%f', i['file']).replace('%l', str(i['line']))
+			view = window.open_file(p, sublime.ENCODED_POSITION)
+			window.focus_view(view)
+			return
+
+		if args.get('refresh'):
+			args = self.settings.get('review_args')
+			self.view.run_command('todo_review', args)
+			self.settings.erase('selected_result')
+			return
+
+		if args.get('direction'):
+			d = args.get('direction')
+			results = self.view.get_regions('results')
+
+			if not results:
+				return
+
+			start_arr = {
+				'down': -1,
+				'up': 0,
+				'down_skip': -1,
+				'up_skip': 0
+			}
+
+			dir_arr = {
+				'down': 1,
+				'up': -1,
+				'down_skip': settings.get('navigation_forward_skip', 10),
+				'up_skip': settings.get('navigation_backward_skip', 10) * -1
+			}
+
+			sel = int(self.settings.get('selected_result', start_arr[d]))
+			sel = sel + dir_arr[d]
+
+			if sel == -1:
 				target = results[len(results) - 1]
-				selection = len(results) - 1
+				sel = len(results) - 1
 
-		view_settings.set('selected_result', selection)
-		target = target.cover(target)
-		self.view.add_regions('selection', [target], 'selected', 'dot')
-		target.b = target.a + 5
-		self.view.show(target)
+			if sel < 0:
+				target = results[0]
+				sel = 0
 
-class ClearSelection(sublime_plugin.TextCommand):
-	def run(self, edit):
-		self.view.erase_regions('selection')
-		self.view.settings().erase('selected_result')
+			if sel >= len(results):
+				target = results[0]
+				sel = 0
 
-class GotoComment(sublime_plugin.TextCommand):
-	def __init__(self, *args):
-		super(GotoComment, self).__init__(*args)
+			target = results[sel]
+			self.settings.set('selected_result', sel)
 
-	def run(self, edit):
-		selection = int(self.view.settings().get('selected_result', -1))
-		selected_region = self.view.get_regions('results')[selection]
-
-		data = self.view.settings().get('result_regions')['{0},{1}'.format(selected_region.a, selected_region.b)]
-		new_view = self.view.window().open_file(data['filepath'])
-		do_when(lambda: not new_view.is_loading(), lambda:new_view.run_command('goto_line', {'line': data['linenum']}))
-
-class MouseGotoComment(sublime_plugin.TextCommand):
-    def __init__(self, *args):
-        super(MouseGotoComment, self).__init__(*args)
-
-    def run(self, edit):
-        if not self.view.settings().get('result_regions'):
-            return
-
-        result = self.view.line(self.view.sel()[0].end())
-
-        target = result.cover(result)
-        self.view.add_regions('selection', [target], 'selected', 'dot')
-        self.view.show(target)
-
-        data = self.view.settings().get('result_regions')['{0},{1}'.format(result.a, result.b)]
-        new_view = self.view.window().open_file(data['filepath'])
-        do_when(lambda: not new_view.is_loading(), lambda: new_view.run_command("goto_line", {"line": data['linenum']}))
+			region = target.cover(target)
+			self.view.add_regions('selection', [region], 'selected', 'dot')
+			region.b = region.a + 5
+			self.view.show(region)
+			return
