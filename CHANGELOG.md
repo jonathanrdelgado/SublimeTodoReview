@@ -1,3 +1,6 @@
+# 3.0.1 - 9/30/14
+- Fix: Rebuild for Package Control
+
 # 3.0.0 - 9/30/14
 - Add: Syntax highlighting for report header
 - Add: Search Timer

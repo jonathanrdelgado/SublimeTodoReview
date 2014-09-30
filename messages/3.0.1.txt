@@ -1,0 +1,14 @@
+TodoReview 3.0.1
+--------------------
+
+Documentation is at https://github.com/jonathandelgado/SublimeTodoReview
+As always, please report any issues.
+
+
+Had to increment the version to fix an issue between github and package control. No changes between this version and 3.0.0.
+
+This should fix the bind issues.
+
+
+# 3.0.1 - 9/30/14
+- Fix: Rebuild for Package Control

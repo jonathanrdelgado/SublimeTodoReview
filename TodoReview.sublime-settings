@@ -12,7 +12,7 @@
 		"*.sublime-project"
 	],
 	"case_sensitive": false,
-	"render_include_folder": false,
+	"render_include_folder": true,
 	"render_maxspaces": 50,
 	"render_header_format": "%d - %c files in %t secs",
 	"render_header_date": "%A %m/%d/%y at %I:%M%p",
