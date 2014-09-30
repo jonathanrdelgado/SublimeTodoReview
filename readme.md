@@ -165,10 +165,10 @@ if you ever feel the overwhelming urge to either remove or edit the standard rep
 "render_header_date": "%A %m/%d/%y at %I:%M%p"
 ```
 
-- **%d** is the formatted date string
-- **%c** is the total file count
-- **%t** is the total time count
-- The date formatting can be found on the [Python Documentation](https://docs.python.org/2/library/datetime.html)
+- **%d** - the formatted date string
+- **%c** - the total file count
+- **%t** - the total time count
+- The date formatting can be found in the [Python Documentation](https://docs.python.org/2/library/datetime.html)
 
 ## Custom Skip Lines
 If you would like to skip more (or less) than 10 lines at a time when using `page up` or `page down`, we have a setting for you! These defaults to `10`.
@@ -181,9 +181,9 @@ If you would like to skip more (or less) than 10 lines at a time when using `pag
 # Arguments
 The TodoReview search engine takes a number of arguments to better find what you are looking for. These are automatically generated on a number of sugar functions, such as using the sidebar or command pallet, but you can also create your own keybinds to utilize them.
 
-- **`paths`** - An array of paths to search
-- **`open_files`** - boolean to include open files
-- **`open_files_only`** - boolean to restrict search to open files
+- `paths` - An array of paths to search
+- `open_files` - Boolean to include open files
+- `open_files_only` - Boolean to restrict search to open files
 
 
 # License

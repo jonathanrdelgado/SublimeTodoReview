@@ -1,0 +1,51 @@
+TodoReview 3.0.0
+--------------------
+
+Documentation is at https://github.com/jonathandelgado/SublimeTodoReview
+As always, please report any issues.
+
+This is a huge update, great ready for some fantastic features!
+
+Some quick bullets:
+- Complete recode - order of magnitude faster
+- Press `r` in report view to refresh the report (using the same arguments)
+- For open files, TodoReview now uses the buffer (yes, unsaved changes are searched)
+- Sort patterns in report by a specific weight
+- New and configurable header
+- Report spacing (between files and notes) is now automatically aligned
+- Timer for each search
+- Non UTF-8 File support
+
+Some breaking changes:
+- `render_spaces` no longer works, use `render_maxspaces` instead
+- Navigation arguments have changed from "forward" and "backward" to "up" and "down"
+- Mousemaps were removed as they are incompatible with the new engine
+
+
+This update was a long time coming. A lot of the features were previously mentioned as upcoming, but were put off due to some code fragmentation. The original project, SublimeTODO, had a much different threading system due to using Python 2. Now that we are in Python 3, I decided to do a full rewrite for not only speed improvements, but allowing additional features to be added with greater ease.
+
+Some cool new features to be aware of: you can now press `r` in the report view to refresh the report. This uses the original arguments, so if you just scanned one file and press `r`, it will only scan that one file again. TodoReview now uses the SublimeText buffer for scanning currently opened files. This is a big feature for two reasons; allowing unsaved changes to be scanned, and skipping a lot of disk IO. Please keep in mind that files that have never been saved to disk, thus don't have a directory in SublimeText will be skipped as normal.
+
+Reports have gotten a complete overhaul, aside from the new refresh feature. The header is now completely configurable and removable. Patterns can be weighed as you like using the new `patterns_weight` setting. Spacing between files and notes are now controlled by an an automatic alignment function, thus deprecating `render_spaces`, but a new setting `render_maxspaces` has been added to manipulate the engine if needed. Also, a timer, if you would like to feel the new and improved speed, has been added to the default report header.
+
+
+# 3.0.0 - 9/30/14
+- Add: Syntax highlighting for report header
+- Add: Search Timer
+- Add: Use buffer if already open
+- Fix: Opening comment to line (#66)
+- Fix: Non UTF-8 Files (#64)
+- Doc: New features
+- Doc: Outlined arguments (#63)
+- Add: `patterns_weight` option (#58)
+- Add: `render_max_spaces` option (#59)
+- Del: `render_spaces` in favor of maxspaces (#59)
+- Add: `render_header_date` option
+- Add: `render_header_format` option
+- Upd: Report Header
+- Add: Refresh function (#60)
+- Upd: Changed direction arguments
+- Del: Clear keybinding
+- Del: Mousemaps
+- Upd: Refactored
+- Upd: Combined keymaps

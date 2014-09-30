@@ -1,11 +1,11 @@
 [
-    {
-        "caption": "TodoReview: Project Files",
-        "command": "todo_review"
-    },
-    {
-    	"caption": "TodoReview: Project and Open Files",
-    	"command": "todo_review",
-    	"args": { "open_files": true }
-    }
+	{
+		"caption": "TodoReview: Project Files",
+		"command": "todo_review"
+	},
+	{
+		"caption": "TodoReview: Project and Open Files",
+		"command": "todo_review",
+		"args": { "open_files": true }
+	}
 ]

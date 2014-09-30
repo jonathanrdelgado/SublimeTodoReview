@@ -1,0 +1,75 @@
+[
+
+	{
+		"keys": ["down"], "command": "todo_review_results",
+		"context": [
+			{"key": "setting.command_mode", "operand": true},
+			{"key": "setting.todo_results"}
+		],
+		"args": {"direction": "down"}
+	},
+
+	{
+		"keys": ["j"], "command": "todo_review_results",
+		"context": [
+			{"key": "setting.command_mode", "operand": true},
+			{"key": "setting.todo_results"}
+		],
+		"args": {"direction": "down"}
+	},
+
+	{
+		"keys": ["pagedown"], "command": "todo_review_results",
+		"context": [
+			{"key": "setting.command_mode", "operand": true},
+			{"key": "setting.todo_results"}
+		],
+		"args": {"direction": "down_skip"}
+	},
+
+	{
+		"keys": ["up"], "command": "todo_review_results",
+		"context": [
+			{"key": "setting.command_mode", "operand": true},
+			{"key": "setting.todo_results"}
+		],
+		"args": {"direction": "up"}
+	},
+
+	{
+		"keys": ["k"], "command": "todo_review_results",
+		"context": [
+			{"key": "setting.command_mode", "operand": true},
+			{"key": "setting.todo_results"}
+		],
+		"args": {"direction": "up"}
+	},
+
+	{
+		"keys": ["pageup"], "command": "todo_review_results",
+		"context": [
+			{"key": "setting.command_mode", "operand": true},
+			{"key": "setting.todo_results"}
+		],
+		"args": {"direction": "up_skip"}
+	},
+
+	{
+		"keys": ["enter"], "command": "todo_review_results",
+		"context": [
+			{"key": "setting.command_mode", "operand": true},
+			{"key": "setting.todo_results"}
+		],
+		"args": {"open": true}
+	},
+
+	{
+		"keys": ["r"], "command": "todo_review_results",
+		"context": [
+			{"key": "setting.command_mode", "operand": true},
+			{"key": "setting.todo_results"}
+		],
+		"args": {"refresh": true}
+	}
+
+]

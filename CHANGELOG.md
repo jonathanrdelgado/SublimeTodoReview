@@ -7,7 +7,7 @@
 - Doc: New features
 - Doc: Outlined arguments (#63)
 - Add: `patterns_weight` option (#58)
-- Add: `render_max_spaces` option (#59)
+- Add: `render_maxspaces` option (#59)
 - Del: `render_spaces` in favor of maxspaces (#59)
 - Add: `render_header_date` option
 - Add: `render_header_format` option
