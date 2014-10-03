@@ -1,3 +1,8 @@
+# 3.0.2 - 10/03/14
+- Doc: Settings as an argument
+- Add: Sync project settings between refreshes (#71)
+- Fix: `include_paths` error (#73) (Thanks @violon3d)
+
 # 3.0.1 - 9/30/14
 - Fix: Rebuild for Package Control
 

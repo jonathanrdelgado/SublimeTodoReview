@@ -1,0 +1,14 @@
+TodoReview 3.0.2
+--------------------
+
+Documentation is at https://github.com/jonathandelgado/SublimeTodoReview
+As always, please report any issues.
+
+
+This version fixes the error when using the `include_paths` setting. Additionally, project settings are carried over when using the refresh feature; this allows using other sublime configuration files to set more specific TodoReview settings. As a byproduct of this addition, you can now use an additional argument `settings` when making keybinds to have command specific settings.
+
+
+# 3.0.2 - 10/03/14
+- Doc: Settings as an argument
+- Add: Sync project settings between refreshes (#71)
+- Fix: `include_paths` error (#73) (Thanks @violon3d)
