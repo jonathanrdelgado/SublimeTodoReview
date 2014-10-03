@@ -18,9 +18,13 @@ import timeit
 
 class Settings():
 
-	def __init__(self, view):
+	def __init__(self, view, args):
 		self.user = sublime.load_settings('TodoReview.sublime-settings')
-		self.proj = view.settings().get('todoreview', {})
+
+		if not args:
+			self.proj = view.settings().get('todoreview', {})
+		else:
+			self.proj = args
 
 
 	def get(self, key, default):
@@ -171,8 +175,8 @@ class TodoReviewCommand(sublime_plugin.TextCommand):
 		filepaths = []
 		self.args = args
 		window = self.view.window()
-		settings = Settings(self.view)
 		paths = args.get('paths', None)
+		settings = Settings(self.view, args.get('settings', False))
 
 		if not paths and settings.get('include_paths', False):
 			paths = settings.get('include_paths', False)
@@ -219,6 +223,7 @@ class TodoReviewRender(sublime_plugin.TextCommand):
 		self.draw_results()
 
 		self.window.focus_view(self.rview)
+		self.args['settings'] = settings.proj
 		self.rview.settings().set('review_args', self.args)
 
 
