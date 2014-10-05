@@ -1,3 +1,7 @@
+# 3.0.3 - 10/05/14
+- Doc: Updated ST3 references
+- Add: Sublime Text 2 Support
+
 # 3.0.2 - 10/03/14
 - Doc: Settings as an argument
 - Add: Sync project settings between refreshes (#71)

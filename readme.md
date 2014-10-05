@@ -1,5 +1,5 @@
 # TodoReview
-A SublimeText 3 plugin for reviewing todo (and other) comments within your code.
+A SublimeText plugin for reviewing todo (and other) comments within your code.
 
 ![ScreenShot](http://i.imgur.com/0kTJ3cU.png)
 
@@ -18,7 +18,7 @@ If you are forking this project, or for whatever reason do not want to use Packa
 
 
 # Usage
-Simply open your Sublime Text 3 Command Pallet and find the `TodoReview: Project Files` command. This will generate your TODO List using all files that are currently in your project, except the ones which are excluded in your settings. If you would like to also include your open files within the search, you can use the `TodoReview: Project and Open Files` command; it's that easy! You can then use these results to jump to the corresponding result. Additionally, you can right click a file or folder in your sidebar and select TodoReview to limit your search.
+Simply open your Sublime Text Command Pallet and find the `TodoReview: Project Files` command. This will generate your TODO List using all files that are currently in your project, except the ones which are excluded in your settings. If you would like to also include your open files within the search, you can use the `TodoReview: Project and Open Files` command; it's that easy! You can then use these results to jump to the corresponding result. Additionally, you can right click a file or folder in your sidebar and select TodoReview to limit your search.
 
 ## Navigating results
 Once the list is generated, as a swift coder, you must naturally want to navigate it with your keyboard, right? Well you are in luck!

@@ -1,0 +1,13 @@
+TodoReview 3.0.3
+--------------------
+
+Documentation is at https://github.com/jonathandelgado/SublimeTodoReview
+As always, please report any issues.
+
+
+This version adds ST2 Support. No changes for ST3 users.
+
+
+# 3.0.3 - 10/05/14
+- Doc: Updated ST3 references
+- Add: Sublime Text 2 Support
