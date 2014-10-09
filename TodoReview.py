@@ -335,8 +335,9 @@ class TodoReviewRender(sublime_plugin.TextCommand):
 
 	def draw_file(self, item):
 		if settings.get('render_include_folder', False):
+			depth = settings.get('render_folder_depth', 1)
 			f = os.path.dirname(item['file']).replace('\\', '/').split('/')
-			f = f[len(f) - 1]  + '/' + os.path.basename(item['file'])
+			f = '/'.join(f[-depth:] + [os.path.basename(item['file'])])
 		else:
 			f = os.path.basename(item['file'])
 
