@@ -146,8 +146,11 @@ By default, searching is not case sensitive. If you would like it to force case,
 ## Include folders in results
 If you have a large project with repeating file names, it is sometimes useful to also have the file's folder displayed in the results. This would turn the result `index.js:1` to `lib/index.js:1`. Results are sorted alphabetically to group folders and files together. Please note that results are sorted by priority first. This defaults to `false`.
 
+Additionally, if you choose to include folders in your report, you may also specify the folder depth for your report paths.
+
 ```javascript
-"render_include_folder": true
+"render_include_folder": true,
+"render_folder_depth": 5
 ```
 
 ## Align results

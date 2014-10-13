@@ -1,0 +1,13 @@
+TodoReview 3.0.4
+--------------------
+
+Documentation is at https://github.com/jonathandelgado/SublimeTodoReview
+As always, please report any issues.
+
+
+This version adds an additional setting, `render_folder_depth` that allows you to add more folder levels to the left side of the report.
+
+
+#3.0.4 - 10/09/14
+- Doc: Folder Depth Support
+- Add: Folder Depth Support (Thanks @Rylon)
