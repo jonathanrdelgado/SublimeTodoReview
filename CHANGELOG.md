@@ -1,3 +1,7 @@
+#3.0.5 - 10/25/14
+- Doc: `encoding` setting
+- Add: UTF-8 File Fix (#79, #81, #82, #83)
+
 #3.0.4 - 10/09/14
 - Doc: Folder Depth Support
 - Add: Folder Depth Support (Thanks @Rylon)

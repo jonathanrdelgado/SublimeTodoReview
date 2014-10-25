@@ -1,0 +1,13 @@
+TodoReview 3.0.5
+--------------------
+
+Documentation is at https://github.com/jonathandelgado/SublimeTodoReview
+As always, please report any issues.
+
+
+This version fixes the UTF-8 file encoding issue. Some files with non-standard were not being properly decoded by python. The plugin now forces UTF-8 encoding to fix this. However, if you are using another encoding, you can now use the `encoding` setting to override the default. Values for this setting can be found in the python file encoding documentation.
+
+
+#3.0.5 - 10/25/14
+- Doc: `encoding` setting
+- Add: UTF-8 File Fix (#79, #81, #82, #83)

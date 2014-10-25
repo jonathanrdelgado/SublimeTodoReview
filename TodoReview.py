@@ -7,6 +7,7 @@ A SublimeText 3 plugin for reviewing todo (and other) comments within your code.
 
 import datetime
 import fnmatch
+import io
 import itertools
 import os
 import re
@@ -101,7 +102,7 @@ class Engine():
 								f.append(view.substr(line))
 							break
 				else:
-					f = open(p, 'r')
+					f = io.open(p, 'r', encoding=settings.get('encoding', 'utf-8'))
 
 				for num, line in enumerate(f, 1):
 					for result in self.patterns.finditer(line):

@@ -143,6 +143,13 @@ By default, searching is not case sensitive. If you would like it to force case,
 "case_sensitive": true
 ```
 
+## Encoding
+If you are planning on using any non UTF-8 characters in your comments, you may need to change this setting to your file encodings for a project. Please note, this setting doesn't affect currently opened files, since Sublime Text handles the encoding on buffered files. All files that need to be opened are done so though python, this setting directly affects the encoding as files are opened. The default is `utf-8`.
+
+```javascript
+"encoding": "western-258"
+```
+
 ## Include folders in results
 If you have a large project with repeating file names, it is sometimes useful to also have the file's folder displayed in the results. This would turn the result `index.js:1` to `lib/index.js:1`. Results are sorted alphabetically to group folders and files together. Please note that results are sorted by priority first. This defaults to `false`.
 
