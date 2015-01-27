@@ -94,7 +94,7 @@ In case you want a non-alphabetical sort of the patterns, you can use the `patte
 
 ```javascript
 "patterns_weight": {
-	"NOTE": 3
+	"NOTE": 3,
     "TEST": "z"
 }
 
