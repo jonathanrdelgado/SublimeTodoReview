@@ -1,0 +1,9 @@
+TodoReview 3.0.6
+--------------------
+
+Documentation is at https://github.com/jonathandelgado/SublimeTodoReview
+As always, please report any issues.
+
+#3.0.6 - 02/19/15
+- Add: Open Files Only Command Pallet Option (#96) (Thanks @zephster)
+- Doc: Fixed typo (#94) (Thanks @davidnunez)

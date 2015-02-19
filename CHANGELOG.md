@@ -1,3 +1,7 @@
+#3.0.6 - 02/19/15
+- Add: Open Files Only Command Pallet Option (#96) (Thanks @zephster)
+- Doc: Fixed typo (#94) (Thanks @davidnunez)
+
 #3.0.5 - 10/25/14
 - Doc: `encoding` setting
 - Add: UTF-8 File Fix (#79, #81, #82, #83)
