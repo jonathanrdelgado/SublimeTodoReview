@@ -67,7 +67,7 @@ Global configuration can be set within the standard package settings menu (Prefe
     "settings": {
         "todoreview": {
             "exclude_folders": [
-                "*.git"
+                "*.git*"
             ]
         }
     }
