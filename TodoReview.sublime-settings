@@ -5,7 +5,9 @@
 	"patterns_weight": {
 	},
 	"exclude_folders": [
-		"*.git*"
+		"*.git*",
+		"*node_modules*",
+		"*bower_components*"
 	],
 	"exclude_files": [
 		"*.sublime-workspace",
