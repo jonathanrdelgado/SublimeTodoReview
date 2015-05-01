@@ -12,7 +12,6 @@ import itertools
 import os
 import re
 import sublime
-import sublime
 import sublime_plugin
 import sys
 import threading
