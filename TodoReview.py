@@ -2,7 +2,7 @@
 SublimeTodoReview
 A SublimeText 3 plugin for reviewing todo (and other) comments within your code.
 
-@author Jonathan Delgado (Initial Repo by @robcowie and ST3 update by @dnatag)
+@author Jonathan Delgado (Initial Repo by @robcowie and ST3 update by @dnatag), Erich Gubler (@erichdongubler)
 '''
 
 import datetime
@@ -43,17 +43,20 @@ class Engine():
 			case = 0
 		else:
 			case = re.IGNORECASE
+	
+		self.patterns = [re.compile(p, case) for p in settings.get('patterns', [])] # Get abstract patterns
+		self.keywords = settings.get('keywords', {}) # Get keyword maps
 
-		patt_patterns = settings.get('patterns', {})
+		# Convert keyword patterns to regexes (keyword itself if not defined)
+		for k, kmap in self.keywords.items():
+			kmap['pattern'] = re.compile(kmap.get('pattern', k))
+
 		patt_files = settings.get('exclude_files', [])
 		patt_folders = settings.get('exclude_folders', [])
 
-		match_patterns = '|'.join(patt_patterns.values())
 		match_files = [fnmatch.translate(p) for p in patt_files]
 		match_folders = [fnmatch.translate(p) for p in patt_folders]
 
-		self.patterns = re.compile(match_patterns, case)
-		self.priority = re.compile(r'\(([0-9]{1,2})\)')
 		self.exclude_files = [re.compile(p) for p in match_files]
 		self.exclude_folders = [re.compile(p) for p in match_folders]
 
@@ -104,26 +107,32 @@ class Engine():
 					f = io.open(p, 'r', encoding=settings.get('encoding', 'utf-8'))
 
 				for num, line in enumerate(f, 1):
-					for result in self.patterns.finditer(line):
-						for patt, note in result.groupdict().items():
+					for pattern in self.patterns:
+						for result in pattern.finditer(line):
+							named_groups = result.groupdict()
 
-							if not note:
+							# Validate input, need at least a defined keyword
+							if 'keyword' not in named_groups:
 								continue
 
-							priority_match = self.priority.search(note)
-
-							if(priority_match):
-								priority = int(priority_match.group(1))
-							else:
-								priority = 100
+							# Find which keyword this belongs to
+							raw_keyword = named_groups['keyword']
+							associated_keyword = ''
+							for k, kmap in self.keywords.items():
+								if kmap['pattern'].match(raw_keyword):
+									associated_keyword = k
+							if associated_keyword == '': # Not one of ours, throw away
+								break
+							keyword_attributes = self.keywords[associated_keyword]
 
 							yield {
 								'file': p,
-								'patt': patt,
-								'note': note,
+								'patt': associated_keyword,
+								'note': named_groups.get('note', ''),
 								'line': num,
-								'priority': priority
+								'priority': keyword_attributes.get('weight', 100)
 							}
+							break
 
 			except(IOError, UnicodeDecodeError):
 				f = None

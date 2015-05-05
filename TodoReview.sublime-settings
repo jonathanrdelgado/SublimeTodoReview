@@ -1,8 +1,9 @@
 {
-	"patterns": {
-		"TODO": "TODO[\\s]*?:[\\s]*(?P<todo>.*)$"
-	},
-	"patterns_weight": {
+	"patterns": [
+		"(?P<keyword>\\w+)\\s*:\\s*(?P<note>.*)$"
+	],
+	"keywords": {
+		"TODO": {} // Uses pattern "TODO" with weight of 100 by default
 	},
 	"exclude_folders": [
 		"*.git*"
