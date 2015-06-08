@@ -107,7 +107,7 @@ class Engine():
 					for result in self.patterns.finditer(line):
 						for patt, note in result.groupdict().items():
 
-							if not note:
+							if not note and note != "":
 								continue
 
 							priority_match = self.priority.search(note)
