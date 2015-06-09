@@ -1,11 +1,12 @@
 {
 	"patterns": {
-		"TODO": "TODO[\\s]*?:[\\s]*(?P<todo>.*)$"
+		"TODO": "TODO[\\s]*?:?[\\s]*(?P<todo>.*)$"
 	},
 	"patterns_weight": {
 	},
 	"exclude_folders": [
-		"*.git*"
+		"*.git*",
+		"*.svn*"
 	],
 	"exclude_files": [
 		"*.sublime-workspace",
