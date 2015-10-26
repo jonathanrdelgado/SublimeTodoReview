@@ -282,7 +282,7 @@ class TodoReviewRender(sublime_plugin.TextCommand):
 		forms = settings.get('render_header_format', '%d - %c files in %t secs')
 		datestr = settings.get('render_header_date', '%A %m/%d/%y at %I:%M%p')
 
-		if len(forms) == 0:
+		if not forms:
 			return
 
 		date = datetime.datetime.now().strftime(datestr)
