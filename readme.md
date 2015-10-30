@@ -1,3 +1,5 @@
+**This project is no longer under active development due to the lack of support from SublimeText. This project is functional, however, no new features will be implemented, and patches may occur time-to-time.**
+
 # TodoReview
 A SublimeText plugin for reviewing todo (and other) comments within your code.
 

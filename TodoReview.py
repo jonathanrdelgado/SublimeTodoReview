@@ -90,6 +90,7 @@ class Engine():
 
 
 	def extract(self, files):
+		encoding = settings.get('encoding', 'utf-8')
 		for p in files:
 			try:
 				if p in self.open_files:
@@ -101,13 +102,13 @@ class Engine():
 								f.append(view.substr(line))
 							break
 				else:
-					f = io.open(p, 'r', encoding=settings.get('encoding', 'utf-8'))
+					f = io.open(p, 'r', encoding=encoding)
 
 				for num, line in enumerate(f, 1):
 					for result in self.patterns.finditer(line):
 						for patt, note in result.groupdict().items():
 
-							if not note and note != "":
+							if not note and note != '':
 								continue
 
 							priority_match = self.priority.search(note)
@@ -283,6 +284,9 @@ class TodoReviewRender(sublime_plugin.TextCommand):
 		datestr = settings.get('render_header_date', '%A %m/%d/%y at %I:%M%p')
 
 		if not forms:
+			forms = '%d - %c files in %t secs'
+
+		if len(forms) == 0:
 			return
 
 		date = datetime.datetime.now().strftime(datestr)

@@ -1,3 +1,10 @@
+#3.0.7 - 10/30/15
+- Doc: Fixed a typo (Thanks @nunoh)
+- Fix: Removed a double import of sublime (Thanks @mmattes)
+- Add: Allow empty notes (Thanks @Eyenseo)
+- Fix: Prevent ST3 Glitch Crash (#131, #133) (Thanks @nsfmc)
+- Refactor: Cached encoding setting for a speed improvement
+
 #3.0.6 - 02/19/15
 - Add: Open Files Only Command Pallet Option (#96) (Thanks @zephster)
 - Doc: Fixed typo (#94) (Thanks @davidnunez)

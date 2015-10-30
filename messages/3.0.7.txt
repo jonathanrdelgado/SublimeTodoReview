@@ -1,0 +1,17 @@
+TodoReview 3.0.7
+--------------------
+
+Documentation is at https://github.com/jonathandelgado/SublimeTodoReview
+
+This is a maintenance release to resolve issues occurring in the latest ST3 build. There is an issue with the SublimeText setting API, causing issues when a TodoReview tab was previously open then running the command again. Additionally, this adds the ability to have empty notes, which has been stuck in the master branch for a while.
+
+I also want to quickly address the state of SublimeText. As most of you are aware, ST3 development has seemingly stopped, again. There are a lot of glitches that people report to the TodoReview GitHub that simply cannot be fixed due to upstream API issues. The Windows, Linux and Mac distributions all seem to have quirks causing crashes and there is seemingly nothing we can do about it. I know a lot of developers are moving away from Sublime and moving to new, actively developed, text editors, as have I. Accordingly, this project is no longer in active development. Patches still may occur time-to-time, but no new features will be implemented. Thank you to everyone who has used this plugin or has contributed to its development.
+
+
+#3.0.7 - 10/30/15
+- Doc: No longer in active development
+- Doc: Fixed a typo (Thanks @nunoh)
+- Fix: Removed a double import of sublime (Thanks @mmattes)
+- Add: Allow empty notes (Thanks @Eyenseo)
+- Fix: Prevent ST3 Glitch Crash (#131, #133) (Thanks @nsfmc)
+- Refactor: Cached encoding setting for a speed improvement
