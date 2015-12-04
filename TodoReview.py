@@ -286,6 +286,9 @@ class TodoReviewRender(sublime_plugin.TextCommand):
 		if not forms:
 			forms = '%d - %c files in %t secs'
 
+		if not datestr:
+			datestr = '%A %m/%d/%y at %I:%M%p'
+
 		if len(forms) == 0:
 			return
 
