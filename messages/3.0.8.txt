@@ -1,0 +1,10 @@
+TodoReview 3.0.8
+--------------------
+
+Documentation is at https://github.com/jonathandelgado/SublimeTodoReview
+
+This is a maintenance release to resolve issues caused by the ST3 settings API. Some users reported an error `datestr` being undefined after previously ran TodoReview. To reiterate, this project is not in active development, but the package will be supported by patches when needed.
+
+
+#3.0.8 - 4/21/16
+- Fix: Datestr not being defined

@@ -1,3 +1,6 @@
+#3.0.8 - 4/21/16
+- Fix: Datestr not being defined
+
 #3.0.7 - 10/30/15
 - Doc: Fixed a typo (Thanks @nunoh)
 - Fix: Removed a double import of sublime (Thanks @mmattes)
