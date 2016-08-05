@@ -84,7 +84,7 @@ You can use any RegExp pattern to search by, leaving a lot of room for customiza
 
 ```javascript
 "patterns": {
-    "TODO": "TODO[\\s]*?:[\\s]*(?P<todo>.*)$",
+    "TODO": "[\/\/]?TODO[\\s]*?(:|)[\\s]*(?P<todo>.*)$",
     "NOTE": "NOTE[\\s]*?:[\\s]*(?P<note>.*)$",
     "FIXME": "FIX ?ME[\\s]*?:[\\s]*(?P<fixme>.*)$",
     "CHANGED": "CHANGED[\\s]*?:[\\s]*(?P<changed>.*)$"

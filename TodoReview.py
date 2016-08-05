@@ -373,6 +373,19 @@ class TodoReviewResults(sublime_plugin.TextCommand):
 			window.focus_view(view)
 			return
 
+		if args.get('open_via_mouse'):
+			window = self.view.window()
+			mouse_coord = self.view.sel()[0]
+			result = self.view.line( mouse_coord )
+
+			coords = '{0},{1}'.format(result.a, (result.b + 1))
+
+			i = self.settings.get('review_results')[coords]
+			p = "%f:%l".replace('%f', i['file']).replace('%l', str(i['line']))
+			view = window.open_file(p, sublime.ENCODED_POSITION)
+			window.focus_view(view)
+			return
+
 		if args.get('refresh'):
 			args = self.settings.get('review_args')
 			self.view.run_command('todo_review', args)

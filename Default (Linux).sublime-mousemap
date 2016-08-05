@@ -1,0 +1,6 @@
+[
+  {
+    "button": "button1", "count": 2, "command": "todo_review_results",
+    "args": {"open_via_mouse": true}
+  }
+]
