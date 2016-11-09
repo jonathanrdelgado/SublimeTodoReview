@@ -1,3 +1,6 @@
+#3.0.9 - 11/09/16
+- Add: Ability to follow symlinks (Thanks @malexer)
+
 #3.0.8 - 4/21/16
 - Fix: Datestr not being defined
 

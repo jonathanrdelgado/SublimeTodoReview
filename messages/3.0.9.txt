@@ -1,0 +1,7 @@
+TodoReview 3.0.8
+--------------------
+
+Documentation is at https://github.com/jonathandelgado/SublimeTodoReview
+
+#3.0.9 - 11/09/16
+- Add: Ability to follow symlinks (Thanks @malexer)
