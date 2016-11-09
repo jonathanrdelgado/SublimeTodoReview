@@ -65,7 +65,8 @@ class Engine():
 		seen_paths = []
 
 		for dirpath in self.dirpaths:
-			for dirp, dirnames, filepaths in os.walk(self.resolve(dirpath)):
+			dirpath = self.resolve(dirpath)
+			for dirp, dirnames, filepaths in os.walk(dirpath, followlinks=True):
 
 				if any(p.search(dirp) for p in self.exclude_folders):
 					continue
