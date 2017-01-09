@@ -1,5 +1,4 @@
 [
-
 	{
 		"keys": ["down"], "command": "todo_review_results",
 		"context": [
@@ -8,7 +7,6 @@
 		],
 		"args": {"direction": "down"}
 	},
-
 	{
 		"keys": ["j"], "command": "todo_review_results",
 		"context": [
@@ -17,7 +15,6 @@
 		],
 		"args": {"direction": "down"}
 	},
-
 	{
 		"keys": ["pagedown"], "command": "todo_review_results",
 		"context": [
@@ -26,7 +23,6 @@
 		],
 		"args": {"direction": "down_skip"}
 	},
-
 	{
 		"keys": ["up"], "command": "todo_review_results",
 		"context": [
@@ -35,7 +31,6 @@
 		],
 		"args": {"direction": "up"}
 	},
-
 	{
 		"keys": ["k"], "command": "todo_review_results",
 		"context": [
@@ -44,7 +39,6 @@
 		],
 		"args": {"direction": "up"}
 	},
-
 	{
 		"keys": ["pageup"], "command": "todo_review_results",
 		"context": [
@@ -53,7 +47,6 @@
 		],
 		"args": {"direction": "up_skip"}
 	},
-
 	{
 		"keys": ["enter"], "command": "todo_review_results",
 		"context": [
@@ -62,7 +55,6 @@
 		],
 		"args": {"open": true}
 	},
-
 	{
 		"keys": ["r"], "command": "todo_review_results",
 		"context": [
@@ -71,5 +63,4 @@
 		],
 		"args": {"refresh": true}
 	}
-
 ]
