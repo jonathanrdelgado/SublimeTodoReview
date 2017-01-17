@@ -1,5 +1,28 @@
 [
 	{
+		"id": "project",
+		"children":
+		[
+			{
+				"id": "todo_review_project",
+				"caption": "Todos",
+				"command": "todo_review"
+			},
+			{
+				"id": "todo_review_open_files",
+				"caption": "Todos of open files",
+				"command": "todo_review",
+				"args": { "open_files": true, "open_files_only": true }
+			},
+			{
+				"id": "todo_review_project_open_files",
+				"caption": "Todos project and opens",
+				"command": "todo_review",
+				"args": { "open_files": true }
+			}
+		]
+	},
+	{
 		"id": "preferences",
 		"children":
 		[
