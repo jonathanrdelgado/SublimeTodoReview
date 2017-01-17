@@ -1,4 +1,4 @@
-TodoReview 3.0.8
+TodoReview 3.0.9
 --------------------
 
 Documentation is at https://github.com/jonathandelgado/SublimeTodoReview
