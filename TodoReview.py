@@ -151,7 +151,7 @@ class TodoReviewCommand(sublime_plugin.TextCommand):
 		paths = args.get('paths', None)
 		settings = Settings(self.view, args.get('settings', False))
 		if args.get('current_file', False):
-			if  self.view.file_name():
+			if self.view.file_name():
 				paths = []
 				filepaths = [self.view.file_name()]
 			else:
