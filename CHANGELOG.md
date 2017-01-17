@@ -1,3 +1,6 @@
+# 3.0.10 - 01/17/2017
+- Add current_file argument (#146, thanks @marcus-at-localhorst)
+
 # 3.0.9 - 11/09/16
 - Add: Ability to follow symlinks (Thanks @malexer)
 

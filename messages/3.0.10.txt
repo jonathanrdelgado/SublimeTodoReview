@@ -1,0 +1,7 @@
+TodoReview 3.0.10
+--------------------
+
+Documentation is at https://github.com/jonathandelgado/SublimeTodoReview
+
+# 3.0.10 - 01/17/2017
+- Add current_file argument (#146, thanks @marcus-at-localhorst)
