@@ -196,6 +196,7 @@ The TodoReview search engine takes a number of arguments to better find what you
 - `paths` - An array of paths to search
 - `open_files` - Boolean to include open files
 - `open_files_only` - Boolean to restrict search to open files
+- `current_file` - Boolean to restrict search to current, open file
 - `settings` - A settings object; this will override ALL project settings.
 
 

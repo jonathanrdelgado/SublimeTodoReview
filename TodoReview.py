@@ -150,19 +150,27 @@ class TodoReviewCommand(sublime_plugin.TextCommand):
 		window = self.view.window()
 		paths = args.get('paths', None)
 		settings = Settings(self.view, args.get('settings', False))
-		if not paths and settings.get('include_paths', False):
-			paths = settings.get('include_paths', False)
-		if args.get('open_files', False):
-			filepaths = [v.file_name() for v in window.views() if v.file_name()]
-		if not args.get('open_files_only', False):
-			if not paths:
-				paths = window.folders()
+		if args.get('current_file', False):
+			if  self.view.file_name():
+				paths = []
+				filepaths = [self.view.file_name()]
 			else:
-				for p in paths:
-					if os.path.isfile(p):
-						filepaths.append(p)
+				print('TodoReview: File must be saved first')
+				return
 		else:
-			paths = []
+			if not paths and settings.get('include_paths', False):
+				paths = settings.get('include_paths', False)
+			if args.get('open_files', False):
+				filepaths = [v.file_name() for v in window.views() if v.file_name()]
+			if not args.get('open_files_only', False):
+				if not paths:
+					paths = window.folders()
+				else:
+					for p in paths:
+						if os.path.isfile(p):
+							filepaths.append(p)
+			else:
+				paths = []
 		engine = Engine(paths, filepaths, self.view)
 		thread = Thread(engine, self.render)
 		thread.start()
