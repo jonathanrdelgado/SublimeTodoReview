@@ -171,6 +171,9 @@ class TodoReviewCommand(sublime_plugin.TextCommand):
 							filepaths.append(p)
 			else:
 				paths = []
+        if args.get('filepaths', []):
+			paths = []
+			filepaths += args.get('filepaths', [])
 		engine = Engine(paths, filepaths, self.view)
 		thread = Thread(engine, self.render)
 		thread.start()
