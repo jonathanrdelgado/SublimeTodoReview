@@ -11,6 +11,7 @@
 		"*.sublime-workspace",
 		"*.sublime-project"
 	],
+	"resolve_symlinks": true,
 	"case_sensitive": false,
 	"render_include_folder": true,
 	"render_folder_depth": 1,

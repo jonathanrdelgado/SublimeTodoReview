@@ -138,6 +138,13 @@ Though it may be unnecessary for most, I've also included a setting to override 
 ]
 ```
 
+## Resolve Symlinks
+TodoReview tries to resolve symlinks in your projects so the actual file on disk is referenced. This behavior cuts down on a lot of issues related to symlinks being malformed, for instance having a non-existent destination. This might not work with all workflows, for example working with remote servers. For that reason, you are able to set how you want symlinks handled by TodoReview. This is more of an advanced setting, if you aren't getting errors about symlinks, you most likely do not need to change this. The default is `true`.
+
+```javascript
+"resolve_symlinks": false
+```
+
 ## Case Sensitive
 By default, searching is not case sensitive. If you would like it to force case, you can add the following to your config. This defaults to `false`.
 

@@ -113,7 +113,10 @@ class Engine():
 		return self.extract(self.files())
 
 	def resolve(self, directory):
-		return os.path.realpath(os.path.expanduser(os.path.abspath(directory)))
+		if settings.get('resolve_symlinks', True):
+			return os.path.realpath(os.path.expanduser(os.path.abspath(directory)))
+		else:
+			return os.path.expanduser(os.path.abspath(directory))
 
 class Thread(threading.Thread):
 	def __init__(self, engine, callback):
