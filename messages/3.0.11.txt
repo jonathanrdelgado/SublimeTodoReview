@@ -1,0 +1,17 @@
+TodoReview 3.0.11
+--------------------
+
+Documentation is at https://github.com/jonathandelgado/SublimeTodoReview
+
+# 3.0.11 - 02/28/2018
+- Add resolve_symlinks option (#107, #155, thanks @drevicko)
+
+
+Also, as a side note, my good friend Adam Damiano is making a pretty interesting
+game called Bot Land live over at twitch.tv/adam13531 - this isn't an
+advertisement or anything, I just genuinely enjoy watching the project progress
+and thought I would share it with you all.
+
+It has been a long while since I created this project, I was just looking over
+the code base with fond memories. Thank you if you have been using this plugin
+over the years, it's really neat to see consistent downloads even years later.
