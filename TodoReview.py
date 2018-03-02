@@ -170,7 +170,7 @@ class TodoReviewCommand(sublime_plugin.TextCommand):
 					paths = window.folders()
 				else:
 					for p in paths:
-						if os.path.isfile(p):
+						if os.path.isfile(p) and os.path.exists(filepath):
 							filepaths.append(p)
 			else:
 				paths = []
