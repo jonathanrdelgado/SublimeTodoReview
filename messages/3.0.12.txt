@@ -1,0 +1,9 @@
+TodoReview 3.0.12
+--------------------
+
+Documentation is at https://github.com/jonathandelgado/SublimeTodoReview
+
+# 3.0.12 - 03/18/2018
+- Changed default priority to 50 (#158, thanks @locomo)
+  This allows you to have priorities that are both above and below the default
+  priority for ease-of-use.
