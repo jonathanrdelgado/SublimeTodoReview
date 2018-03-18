@@ -28,7 +28,7 @@ Once the list is generated, as a swift coder, you must naturally want to navigat
 By pressing the `up` or `down` keys, you are able to swiftly navigate the results. If you are a VIM user, you can also use `j` and `k` respectably. You can also use `page up` or `page down` to skip 10 lines at a time. Once you have navigated to the result you want, simply press `enter` to open the result in a new tab, while going to the corresponding line. You can also refresh the list at any time by pressing `r`, it uses the same arguments as the last search.
 
 ## Priorities
-New in 2.1.0, results are now fully indexed and sorted. You can now add something like `(0)` to anywhere in your todo's to assign a priority of `0`. This will work with any number up to 99. Todo's are then sorted with the lowest number first; all matches that don't have priorities will be assigned a priority of 100. Here is some example output:
+New in 2.1.0, results are now fully indexed and sorted. You can now add something like `(0)` to anywhere in your todo's to assign a priority of `0`. This will work with any number up to 99. Todo's are then sorted with the lowest number first; all matches that don't have priorities will be assigned a priority of 50. Here is some example output:
 
 ```
 // Tuesday 09/30/14 at 10:46AM - 27 files in 0.16 secs

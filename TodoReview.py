@@ -94,7 +94,7 @@ class Engine():
 							if(priority_match):
 								priority = int(priority_match.group(1))
 							else:
-								priority = 100
+								priority = 50
 							yield {
 								'file': p,
 								'patt': patt,
