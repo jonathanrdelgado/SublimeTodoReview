@@ -1,3 +1,12 @@
+# 3.0.13 - 09/30/2018
+- Add: "auto" option for `render_folder_depth` (#166, thanks @dbeckwith)
+
+# 3.0.12 - 03/18/2018
+- Upd: Default priority is now 50 (#158, thanks @locomo)
+
+# 3.0.11 - 02/28/2018
+- AddL resolve_symlinks option (#107, #155, thanks @drevicko)
+
 # 3.0.10 - 01/17/2017
 - Add current_file argument (#146, thanks @marcus-at-localhorst)
 

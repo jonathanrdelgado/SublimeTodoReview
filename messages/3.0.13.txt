@@ -1,0 +1,7 @@
+TodoReview 3.0.13
+--------------------
+
+Documentation is at https://github.com/jonathandelgado/SublimeTodoReview
+
+# 3.0.13 - 09/30/2018
+- Add: "auto" option for `render_folder_depth` (#166, thanks @dbeckwith)
