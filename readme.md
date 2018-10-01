@@ -169,6 +169,8 @@ Additionally, if you choose to include folders in your report, you may also spec
 "render_folder_depth": 5
 ```
 
+If you are using Sublime in a project or have folders open, you may find it helpful to set `"render_folder_depth"` to `"auto"`, which will render folders in the report up to any folders you have open. For example, if you're working on a project rooted at `/home/user/code/project`, and you have a TODO in `/home/user/code/project/src/file.cpp`, the report would render the file as `src/file.cpp`.
+
 ## Align results
 TodoReview now automatically aligns the comments for you, calculating the largest result and aligning the rest accordingly. The system default for maximum spaces is `50`, which prevents a single file with an abnormally long length completely ruining your results. You can change this setting by editing `render_maxspaces`
 
