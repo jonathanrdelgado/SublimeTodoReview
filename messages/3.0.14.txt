@@ -1,0 +1,7 @@
+TodoReview 3.0.14
+--------------------
+
+Documentation is at https://github.com/jonathanrdelgado/SublimeTodoReview
+
+# 3.0.14 - 11/10/2026
+- Fix: Results tab opening empty on Sublime Text 4 (#175, thanks @ktrutmann and @dpc00)

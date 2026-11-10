@@ -1,3 +1,6 @@
+# 3.0.14 - 11/10/2026
+- Fix: Results tab opening empty on Sublime Text 4 (#175, thanks @ktrutmann and @dpc00)
+
 # 3.0.13 - 09/30/2018
 - Add: "auto" option for `render_folder_depth` (#166, thanks @dbeckwith)
 
