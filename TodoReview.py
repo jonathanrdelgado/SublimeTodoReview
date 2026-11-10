@@ -179,12 +179,39 @@ class TodoReviewCommand(sublime_plugin.TextCommand):
 		thread.start()
 
 	def render(self, results, time, count):
-		self.view.run_command('todo_review_render', {
+		# Called from the scan thread; the Sublime API must be used on the main thread.
+		sublime.set_timeout(lambda: self.draw(results, time, count), 0)
+
+	def draw(self, results, time, count):
+		window = self.view.window() or sublime.active_window()
+		rview = get_results_view(window)
+		# Run the render command on the results view itself, so its edit token
+		# belongs to the view being written to.
+		rview.run_command('todo_review_render', {
 			"results": results,
 			"time": time,
 			"count": count,
 			"args": self.args
 		})
+		window.focus_view(rview)
+
+def get_results_view(window):
+	for view in window.views():
+		if view.settings().get('todo_results', False):
+			return view
+	view = window.new_file()
+	view.set_name('TodoReview')
+	view.set_scratch(True)
+	view.settings().set('todo_results', True)
+	if sys.version_info < (3,0,0):
+		view.set_syntax_file('Packages/TodoReview/TodoReview.hidden-tmLanguage')
+	else:
+		view.assign_syntax('Packages/TodoReview/TodoReview.hidden-tmLanguage')
+	view.settings().set('line_padding_bottom', 2)
+	view.settings().set('line_padding_top', 2)
+	view.settings().set('word_wrap', False)
+	view.settings().set('command_mode', True)
+	return view
 
 class TodoReviewRender(sublime_plugin.TextCommand):
 	def run(self, edit, results, time, count, args):
@@ -194,10 +221,10 @@ class TodoReviewRender(sublime_plugin.TextCommand):
 		self.count = count
 		self.results = results
 		self.sorted = self.sort()
-		self.rview = self.get_view()
+		self.rview = self.view
+		self.rview.erase(self.edit, sublime.Region(0, self.rview.size()))
 		self.draw_header()
 		self.draw_results()
-		self.window.focus_view(self.rview)
 		self.args['settings'] = settings.proj
 		self.rview.settings().set('review_args', self.args)
 
@@ -210,26 +237,6 @@ class TodoReviewRender(sublime_plugin.TextCommand):
 		key = lambda m: (str(w.get(m['patt'].upper(), m['patt'])), m['priority'])
 		results = sorted(self.results, key=key)
 		return itertools.groupby(results, key=lambda m: m['patt'])
-
-	def get_view(self):
-		self.window = sublime.active_window()
-		for view in self.window.views():
-			if view.settings().get('todo_results', False):
-				view.erase(self.edit, sublime.Region(0, view.size()))
-				return view
-		view = self.window.new_file()
-		view.set_name('TodoReview')
-		view.set_scratch(True)
-		view.settings().set('todo_results', True)
-		if sys.version_info < (3,0,0):
-			view.set_syntax_file('Packages/TodoReview/TodoReview.hidden-tmLanguage')
-		else:
-			view.assign_syntax('Packages/TodoReview/TodoReview.hidden-tmLanguage')
-		view.settings().set('line_padding_bottom', 2)
-		view.settings().set('line_padding_top', 2)
-		view.settings().set('word_wrap', False)
-		view.settings().set('command_mode', True)
-		return view
 
 	def draw_header(self):
 		forms = settings.get('render_header_format', '%d - %c files in %t secs')
